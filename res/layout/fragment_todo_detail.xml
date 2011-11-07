@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+    
+    <!-- Dummy for focus -->
+    <LinearLayout
+    	android:focusable="true"
+    	android:focusableInTouchMode="true"
+    	android:layout_width="0px"
+    	android:layout_height="0px"/>
+	    	
+    <ScrollView android:id="@+id/scrollview"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+		
+		<LinearLayout
+		    android:orientation="vertical"
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:background="#FFFFFF">
+		        
+			<ImageView android:id="@+id/todo_image"
+			  	android:layout_width="wrap_content"
+			  	android:layout_height="wrap_content"
+				android:background="@drawable/shadow"
+				android:paddingLeft="4dip"
+		        android:paddingTop="3dip"
+		        android:paddingRight="6.5dip"
+		        android:paddingBottom="6.5dip"
+		        android:adjustViewBounds="true"
+		        android:layout_marginLeft="10dip"
+		        android:layout_marginTop="10dip"
+		        android:layout_marginRight="10dip"
+			    android:layout_gravity="center"  />
+		    
+		    <TextView
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_marginLeft="10dip"
+		        android:layout_marginTop="10dip"
+		        android:text="@string/detail_title"
+		        style="@style/ListItemTitle" />
+			<EditText android:id="@+id/todo_title"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_marginLeft="10dip"
+		        android:layout_marginTop="10dip"
+		        android:layout_marginRight="10dip"
+		        android:maxLines="1"
+		        android:singleLine="true" />
+		        
+		    <TextView
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_marginLeft="10dip"
+		        android:layout_marginTop="10dip"
+		        android:text="@string/detail_description"
+		        style="@style/ListItemTitle" />
+		    <EditText android:id="@+id/todo_description"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_marginLeft="10dip"
+		        android:layout_marginTop="10dip"
+		        android:layout_marginRight="10dip"
+		        android:maxLines="1"
+		        android:singleLine="true" />
+		              
+		</LinearLayout>
+	                
+	</ScrollView>
+	
+</LinearLayout>

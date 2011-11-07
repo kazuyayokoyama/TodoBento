@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+	<!-- Application -->
+    <string name="app_name">TodoBento</string>
+
+	<!-- Description -->
+    <string name="description_logo">TodoBento</string>
+    <string name="description_home">Home</string>
+    <string name="description_add">Add</string>
+    <string name="description_picture">Picture</string>
+    <string name="description_camera">Camera</string>
+    <string name="description_gallery">Gallery</string>
+    <string name="description_save">Save</string>
+    <string name="description_clear">Clear</string>
+    <string name="description_info">Information</string>
+    
+    <!-- Warning -->
+    <string name="warning_launch">Please launch with Musubi!!!</string>
+    
+    <!-- Add Dialog -->
+    <string name="add_dialog_title">New To-do</string>
+    <string name="add_dialog_text">Please input to-do item</string>
+    
+    <!-- Clear Dialog -->
+    <string name="clear_dialog_title">Clear Completed</string>
+    <string name="clear_dialog_text">Are you sure?</string>
+    
+    <!-- Todo Detail -->
+    <string name="title_todo_detail">Detail</string>
+    <string name="detail_title">Title</string>
+    <string name="detail_description">Description</string>
+    
+    <!-- Update Feed Message -->
+    <string name="feed_msg_added">\'<xliff:g id="item">%1$s</xliff:g>\' is added.</string>
+    <string name="feed_msg_added_photo">Photo item is added.</string>
+    <string name="feed_msg_updated">Some items are updated.</string>
+    <string name="feed_msg_done">\'<xliff:g id="item">%1$s</xliff:g>\' is done!</string>
+    <string name="feed_msg_done_notitle">Photo item is done!</string>
+    <string name="feed_msg_undone">\'<xliff:g id="item">%1$s</xliff:g>\' is undone...</string>
+    <string name="feed_msg_undone_notitle">Photo item is undone...</string>
+    <string name="feed_msg_cleared">Completed items are cleared.</string>
+    <string name="feed_msg_sorted">Some items are sorted.</string>
+    <string name="feed_msg_removed">\'<xliff:g id="query">%1$s</xliff:g>\' is removed.</string>
+    
+    <!-- Toast Message -->
+    <string name="toast_updated">Updated!</string>
+    
+</resources>

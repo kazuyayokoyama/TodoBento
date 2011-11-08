@@ -88,6 +88,7 @@ public class TodoDataManager {
 		mBaseUri = baseUri;
 		mLocalContactId = mMusubi.userForLocalDevice(mBaseUri).getId();
 
+		sJSONObj = null;
 		Obj obj = mMusubi.getFeed().getLatestObj();
 		if (obj != null && obj.getJson() != null && obj.getJson().has(TodoDataManager.STATE)) {
 			sJSONObj = obj.getJson().optJSONObject(TodoDataManager.STATE);

@@ -16,19 +16,9 @@
   limitations under the License.
   -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/menu_clear"
-        android:icon="@drawable/ic_menu_clear_playlist"
-        android:title="@string/description_clear"
-        android:orderInCategory="1"
-        android:showAsAction="always" />
-    <item android:id="@+id/menu_picture"
-        android:icon="@drawable/ic_menu_picture"
-        android:title="@string/description_picture"
-        android:orderInCategory="2"
-        android:showAsAction="always" />
-    <item android:id="@+id/menu_add"
-        android:icon="@drawable/ic_menu_add"
-        android:title="@string/description_add"
-        android:orderInCategory="3"
-        android:showAsAction="always" />
+    <item android:id="@+id/menu_info"
+        android:icon="@drawable/ic_menu_info_details"
+        android:title="@string/description_info"
+        android:orderInCategory="100"
+        android:showAsAction="ifRoom" />
 </menu>

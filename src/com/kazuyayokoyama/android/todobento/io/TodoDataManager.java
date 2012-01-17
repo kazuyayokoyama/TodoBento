@@ -20,9 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mobisocial.socialkit.Obj;
-import mobisocial.socialkit.musubi.MemObj;
 import mobisocial.socialkit.musubi.Musubi;
 import mobisocial.socialkit.musubi.multiplayer.FeedRenderable;
+import mobisocial.socialkit.obj.MemObj;
 
 import org.json.JSONArray;
 import org.json.JSONException;

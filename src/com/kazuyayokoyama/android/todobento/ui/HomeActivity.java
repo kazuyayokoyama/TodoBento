@@ -20,7 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
-import mobisocial.socialkit.Obj;
+import mobisocial.socialkit.musubi.DbObj;
 import mobisocial.socialkit.musubi.FeedObserver;
 import mobisocial.socialkit.musubi.Musubi;
 
@@ -231,7 +231,11 @@ public class HomeActivity extends BaseActivity {
 
 	public void goPicture() {
 		// TODO need to find out way to specify child by id
-		mQuickAction.show(getActivityHelper().getActionBarCompat().getChildAt(4));
+		if (getActivityHelper().getActionBarCompat() != null) {
+			mQuickAction.show(getActivityHelper().getActionBarCompat().getChildAt(4));
+		} else {
+			mQuickAction.show(this.getWindow().getDecorView());
+		}
 		mQuickAction.setAnimStyle(QuickAction.ANIM_GROW_FROM_CENTER);
 	}
 
@@ -353,7 +357,7 @@ public class HomeActivity extends BaseActivity {
 	// ----------------------------------------------------------
 	private final FeedObserver mStateObserver = new FeedObserver() {
 		@Override
-		public void onUpdate(Obj obj) {
+		public void onUpdate(DbObj obj) {
 			JSONObject newState = obj.getJson();
 			if (newState == null || !newState.has(TodoDataManager.STATE))
 				return;

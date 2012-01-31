@@ -1,48 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-	<!-- Application -->
-    <string name="app_name">TodoBento</string>
+<!--
+    Copyright (C) 2012 Kazuya (Kaz) Yokoyama <kazuya.yokoyama@gmail.com>
 
-	<!-- Description -->
-    <string name="description_logo">TodoBento</string>
-    <string name="description_home">Home</string>
-    <string name="description_add">Add</string>
-    <string name="description_picture">Picture</string>
-    <string name="description_camera">Camera</string>
-    <string name="description_gallery">Gallery</string>
-    <string name="description_save">Save</string>
-    <string name="description_clear">Clear</string>
-    <string name="description_info">Information</string>
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     
-    <!-- Warning -->
-    <string name="warning_launch">Please launch with Musubi!!!</string>
+	<!-- Label -->
+    <string name="app_name">TodoBento</string>
+    <string name="label_bento_list">TodoBento / Bento List</string>
+    <string name="label_todo_list">Todo List</string>
+    <string name="label_todo_detail">Detail</string>
+
+	<!-- Menu -->
+    <string name="menu_bento_add">Create</string>
+    <string name="menu_todo_add">Add</string>
+    <string name="menu_todo_picture">Picture</string>
+    <string name="menu_todo_camera">Camera</string>
+    <string name="menu_todo_gallery">Gallery</string>
+    <string name="menu_todo_save">Save</string>
+    <string name="menu_todo_more">More</string>
+    <string name="menu_todo_clear">Clear Completed</string>
+    <string name="menu_todo_bento_list">Bento List</string>
     
-    <!-- Add Dialog -->
-    <string name="add_dialog_title">New To-do</string>
-    <string name="add_dialog_text">Please input to-do item</string>
-    
-    <!-- Clear Dialog -->
-    <string name="clear_dialog_title">Clear Completed</string>
+    <!-- Dialog -->
+    <string name="market_dialog_title">Thank you for using TodoBento!</string>
+    <string name="market_dialog_text">If you want to use TodoBento, please download Musubi first and launch TodoBento again on Musubi.\nDownload Musubi now?</string>
+    <string name="market_dialog_yes">Sure!</string>
+    <string name="market_dialog_no">No, thanks</string>
+    <string name="musubi_dialog_title">Thank you for using TodoBento!</string>
+    <string name="musubi_dialog_text">If you want to use TodoBento, please launch it on Musubi.\nLaunch Musubi now?</string>
+    <string name="musubi_dialog_yes">Sure!</string>
+    <string name="musubi_dialog_no">No, thanks</string>
+    <string name="add_dialog_title">New Todo</string>
+    <string name="add_dialog_text">Please input Todo item</string>
+    <string name="add_dialog_ok">OK</string>
+    <string name="add_dialog_cancel">Cancel</string>
+    <string name="clear_dialog_title">Clear Completed Items</string>
     <string name="clear_dialog_text">Are you sure?</string>
+    <string name="clear_dialog_yes">Yes</string>
+    <string name="clear_dialog_cancel">No</string>
+    <string name="create_dialog_title">New Bento</string>
+    <string name="create_dialog_text">Bento is a container for organizing todo list. Please create new Bento first for adding new todo.</string>
+    <string name="create_dialog_hint">shopping list, reminder</string>
+    <string name="create_dialog_ok">OK</string>
+    <string name="create_dialog_cancel">Cancel</string>
+    <string name="bento_list_dialog_title">Bento List</string>
+    <string name="bento_list_dialog_text"></string>
+    <string name="bento_list_dialog_ok">OK</string>
+    <string name="bento_list_dialog_cancel">Cancel</string>
+    
+    <!-- Bento List -->
+    <string name="bento_list_empty">No Bentos</string>
+    <string name="bento_list_number"><xliff:g id="number">%1$s</xliff:g> todo</string>
+    <string name="bento_list_loading">Loading</string>
+    
+    <!-- Todo List -->
+    <string name="todo_list_empty">No todo.\nPlease add the first todo right now!</string>
+    <string name="todo_list_loading">Loading</string>
     
     <!-- Todo Detail -->
-    <string name="title_todo_detail">Detail</string>
     <string name="detail_title">Title</string>
     <string name="detail_description">Description</string>
     
     <!-- Update Feed Message -->
-    <string name="feed_msg_added">\'<xliff:g id="item">%1$s</xliff:g>\' is added.</string>
-    <string name="feed_msg_added_photo">Photo item is added.</string>
-    <string name="feed_msg_updated">Some items are updated.</string>
-    <string name="feed_msg_done">\'<xliff:g id="item">%1$s</xliff:g>\' is done!</string>
-    <string name="feed_msg_done_notitle">Photo item is done!</string>
-    <string name="feed_msg_undone">\'<xliff:g id="item">%1$s</xliff:g>\' is undone...</string>
-    <string name="feed_msg_undone_notitle">Photo item is undone...</string>
-    <string name="feed_msg_cleared">Completed items are cleared.</string>
-    <string name="feed_msg_sorted">Some items are sorted.</string>
-    <string name="feed_msg_removed">\'<xliff:g id="query">%1$s</xliff:g>\' is removed.</string>
-    
-    <!-- Toast Message -->
-    <string name="toast_updated">Updated!</string>
+    <string name="feed_msg_created"><xliff:g id="name">%1$s</xliff:g> just created new Bento. Add new todo!</string>
+    <string name="feed_msg_added"><xliff:g id="name">%1$s</xliff:g> just added\n \'<xliff:g id="todo">%2$s</xliff:g>\'.</string>
+    <string name="feed_msg_added_photo"><xliff:g id="name">%1$s</xliff:g> just added\n a photo todo!</string>
+    <string name="feed_msg_updated"><xliff:g id="name">%1$s</xliff:g> updated some todo.</string>
+    <string name="feed_msg_done">Yay! <xliff:g id="name">%1$s</xliff:g> got \'<xliff:g id="todo">%2$s</xliff:g>\' done!</string>
+    <string name="feed_msg_done_notitle">Yay! <xliff:g id="name">%1$s</xliff:g> got a todo done!</string>
+    <string name="feed_msg_undone">Hmm. <xliff:g id="name">%1$s</xliff:g> returned \'<xliff:g id="todo">%2$s</xliff:g>\' to undone.</string>
+    <string name="feed_msg_undone_notitle">Hmm. <xliff:g id="name">%1$s</xliff:g> returned a todo to undone.</string>
+    <string name="feed_msg_cleared"><xliff:g id="name">%1$s</xliff:g> cleared completed todo.</string>
+    <string name="feed_msg_sorted"><xliff:g id="name">%1$s</xliff:g> sorted some todo.</string>
     
 </resources>

@@ -14,14 +14,10 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<resources>
-
-    <!-- body content -->
-    <dimen name="body_padding_medium">10dp</dimen>
-    <dimen name="body_padding_large">10dp</dimen>
-    <dimen name="text_size_small">14sp</dimen>
-    <dimen name="text_size_medium">18sp</dimen>
-    <dimen name="text_size_large">18sp</dimen>
-    <dimen name="text_size_xlarge">18sp</dimen>
-
-</resources>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_add"
+        android:icon="@drawable/ic_menu_add"
+        android:title="@string/menu_bento_add"
+        android:orderInCategory="1"
+        android:showAsAction="always" />
+</menu>

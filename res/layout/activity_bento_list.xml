@@ -14,14 +14,16 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<resources>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_container"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <!-- body content -->
-    <dimen name="body_padding_medium">10dp</dimen>
-    <dimen name="body_padding_large">10dp</dimen>
-    <dimen name="text_size_small">14sp</dimen>
-    <dimen name="text_size_medium">18sp</dimen>
-    <dimen name="text_size_large">18sp</dimen>
-    <dimen name="text_size_xlarge">18sp</dimen>
-
-</resources>
+    <fragment android:name="com.kazuyayokoyama.android.apps.todobento.ui.BentoListFragment"
+        android:id="@+id/fragment_bento_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
+        
+</LinearLayout>

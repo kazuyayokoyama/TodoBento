@@ -14,14 +14,22 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<resources>
-
-    <!-- body content -->
-    <dimen name="body_padding_medium">10dp</dimen>
-    <dimen name="body_padding_large">10dp</dimen>
-    <dimen name="text_size_small">14sp</dimen>
-    <dimen name="text_size_medium">18sp</dimen>
-    <dimen name="text_size_large">18sp</dimen>
-    <dimen name="text_size_xlarge">18sp</dimen>
-
-</resources>
+<LinearLayout
+  	xmlns:android="http://schemas.android.com/apk/res/android"
+  	android:layout_width="300dip"
+  	android:layout_height="200dip"
+  	android:orientation="vertical">
+ 
+    <EditText
+        android:id="@+id/edittext_bento_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dip"
+		android:layout_marginRight="10dip"
+        android:scrollHorizontally="true"
+        android:autoText="false"
+        android:capitalize="none"
+        android:hint="@string/create_dialog_hint"
+        android:gravity="fill_horizontal" />
+        
+</LinearLayout>

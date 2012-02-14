@@ -30,19 +30,24 @@ import com.kazuyayokoyama.android.apps.todobento.io.BentoManager.OnStateUpdatedL
 import com.kazuyayokoyama.android.apps.todobento.ui.TodoListFragment.OnBentoSelectedListener;
 
 public class TodoListActivity extends FragmentActivity implements OnBentoSelectedListener {
+	public static final String EXTRA_LAUNCHED_FROM_BENTO_LIST = "launched_from_bento_list";
+	
 	//private static final String TAG = "TodoListActivity";
 
     private BentoManager mManager = BentoManager.getInstance();
     private TodoListFragment mTodoListFragment;
+    private boolean mLaunchedFromBentoList = false;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_todo_list);
+        
+        mLaunchedFromBentoList = getIntent().hasExtra(EXTRA_LAUNCHED_FROM_BENTO_LIST);
 
 		final ActionBar actionBar = getSupportActionBar();
 		// set defaults for logo & home up
-		actionBar.setDisplayHomeAsUpEnabled(false);
+		actionBar.setDisplayHomeAsUpEnabled(mLaunchedFromBentoList);
 		actionBar.setDisplayUseLogoEnabled(false);
 		actionBar.setTitle(mManager.getBentoListItem().bento.name.toString());
 		
@@ -68,7 +73,9 @@ public class TodoListActivity extends FragmentActivity implements OnBentoSelecte
 	public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
         case android.R.id.home:
-            finish();
+        	if (mLaunchedFromBentoList) {
+        		finish();
+        	}
             return true;
         default:
             return mTodoListFragment.onOptionsItemSelected(item);

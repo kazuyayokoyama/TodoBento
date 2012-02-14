@@ -73,6 +73,7 @@ public class BentoListFragment extends ListFragment {
 		
 		// Intent
 		Intent intent = new Intent(getActivity(), TodoListActivity.class);
+		intent.putExtra(TodoListActivity.EXTRA_LAUNCHED_FROM_BENTO_LIST, true);
 		startActivity(intent);
 	}
 

@@ -148,18 +148,6 @@ public class BentoManager {
 		return null;
 	}
 
-	synchronized public void sortTodoList(int positionFrom, int positionTo) {
-		TodoListItem item = mBento.bento.todoList.get(positionFrom);
-		
-		if (positionFrom < positionTo) {
-			mBento.bento.todoList.add(positionTo, item);
-			mBento.bento.todoList.remove(positionFrom);
-		} else if (positionFrom > positionTo) {
-			mBento.bento.todoList.remove(positionFrom);
-			mBento.bento.todoList.add(positionTo, item);
-		}
-	}
-
 	synchronized public int getTodoListCount() {
 		return mBento.bento.todoList.size();
 	}
@@ -189,10 +177,7 @@ public class BentoManager {
 		}
 		c.close();
 
-		// dummy
-		if (bitmap == null) {
-			bitmap = BitmapHelper.getDummyBitmap(targetWidth, targetHeight);
-		} else {
+		if (bitmap != null) {
 			bitmap = BitmapHelper.getResizedBitmap(bitmap, targetWidth, targetHeight, degrees);
 		}
 
@@ -288,6 +273,18 @@ public class BentoManager {
 		}
 
 		pushUpdate(htmlMsg);
+	}
+
+	synchronized public void sortTodoList(int positionFrom, int positionTo) {
+		TodoListItem item = mBento.bento.todoList.get(positionFrom);
+		
+		if (positionFrom < positionTo) {
+			mBento.bento.todoList.add(positionTo, item);
+			mBento.bento.todoList.remove(positionFrom);
+		} else if (positionFrom > positionTo) {
+			mBento.bento.todoList.remove(positionFrom);
+			mBento.bento.todoList.add(positionTo, item);
+		}
 	}
 
 	synchronized public void sortTodoCompleted(String htmlMsg) {

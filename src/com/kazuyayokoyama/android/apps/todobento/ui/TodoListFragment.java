@@ -20,6 +20,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
+import leoliang.tasks365.DraggableListView;
+import leoliang.tasks365.DraggableListView.DropListener;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -65,7 +67,7 @@ public class TodoListFragment extends ListFragment {
     
 	private BentoManager mManager = BentoManager.getInstance();
 	private TodoListItemAdapter mListAdapter = null;
-	private SortableListView mListView = null;
+	private DraggableListView mListView = null;
 	private boolean mSorted = false;
     private OnBentoSelectedListener mListener;
 
@@ -76,10 +78,25 @@ public class TodoListFragment extends ListFragment {
         View root = inflater.inflate(R.layout.fragment_todo_list, container, false);
         
         // ListView
-		mListView = (SortableListView) root.findViewById(android.R.id.list);
-        mListView.setDragListener(new DragListener());
-        mListView.setSortable(false);
+		mListView = (DraggableListView) root.findViewById(android.R.id.list);
         mListView.setFastScrollEnabled(true);
+        mListView.setDropListener(new DropListener() {
+            @Override
+            public void drop(int from, int to) {
+                if (from == to) {
+                    return;
+                }
+
+				// sort
+				StringBuilder msg = new StringBuilder(
+						getString(R.string.feed_msg_sorted, mManager.getLocalName()));
+				String htmlMsg = UIUtils.getHtmlString(mManager.getBentoListItem().bento.name, msg.toString());
+                mManager.sortTodoList(from, to);
+                mManager.sortTodoCompleted(htmlMsg);
+                
+                refreshView();
+            }
+        });
 		
         return root;
     }

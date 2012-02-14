@@ -21,7 +21,7 @@
     android:layout_height="match_parent"
     android:background="#FFFFFF">
 
-    <com.kazuyayokoyama.android.apps.todobento.ui.widget.SortableListView android:id="@id/android:list"
+    <leoliang.tasks365.DraggableListView android:id="@id/android:list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"

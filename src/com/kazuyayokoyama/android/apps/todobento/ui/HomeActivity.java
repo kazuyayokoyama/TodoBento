@@ -33,6 +33,7 @@ import android.support.v4.app.FragmentActivity;
 
 import com.kazuyayokoyama.android.apps.todobento.R;
 import com.kazuyayokoyama.android.apps.todobento.io.BentoManager;
+import com.kazuyayokoyama.android.apps.todobento.util.ImageCache;
 
 public class HomeActivity extends FragmentActivity {
 	public static final String EXTRA_TODO = "com.kazuyayokoyama.android.apps.todobento.extra.EXTRA_TODO";
@@ -61,7 +62,7 @@ public class HomeActivity extends FragmentActivity {
 			if (bInstalled) {
 				goMusubi();
 			} else {
-				goMarket();
+				goMusubiOnMarket();
 			}
 		} else {
 	
@@ -75,17 +76,25 @@ public class HomeActivity extends FragmentActivity {
 			Intent intent = getIntent();
 			mMusubi = Musubi.getInstance(this);
 			
-			// get version code
-			int versionCode = 0;
-			try {
-				PackageInfo packageInfo = getPackageManager().getPackageInfo(
-						"com.kazuyayokoyama.android.apps.todobento", PackageManager.GET_META_DATA);
-				versionCode = packageInfo.versionCode;
-			} catch (NameNotFoundException e) {
-			    e.printStackTrace();
+			// Check iif this activity launched from apps feed
+			if (mMusubi == null || mMusubi.getObj() == null || mMusubi.getObj().getSubfeed() == null) {
+				// go to market
+				goMarket();
+				
+			} else {
+				
+				// get version code
+				int versionCode = 0;
+				try {
+					PackageInfo packageInfo = getPackageManager().getPackageInfo(
+							"com.kazuyayokoyama.android.apps.todobento", PackageManager.GET_META_DATA);
+					versionCode = packageInfo.versionCode;
+				} catch (NameNotFoundException e) {
+				    e.printStackTrace();
+				}
+				
+				new TodoListAsyncTask(this, (Uri) intent.getParcelableExtra(Musubi.EXTRA_FEED_URI), versionCode).execute();
 			}
-			
-			new TodoListAsyncTask(this, (Uri) intent.getParcelableExtra(Musubi.EXTRA_FEED_URI), versionCode).execute();
 		}
 	}
 
@@ -93,12 +102,14 @@ public class HomeActivity extends FragmentActivity {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == REQUEST_TODO_LIST) {
 			mManager.fin();
+			ImageCache.clearCache();
 			finish();
 		} else if (requestCode == REQUEST_BENTO_LIST) {
 			if (resultCode == Activity.RESULT_OK) {
 				goTodoList();
 			} else {
 				mManager.fin();
+				ImageCache.clearCache();
 				finish();
 			}
 		}
@@ -116,7 +127,7 @@ public class HomeActivity extends FragmentActivity {
 		startActivityForResult(intent, REQUEST_TODO_LIST);
     }
     
-	private void goMarket() {
+	private void goMusubiOnMarket() {
 		AlertDialog.Builder marketDialog = new AlertDialog.Builder(this)
 				.setTitle(R.string.market_dialog_title)
 				.setMessage(R.string.market_dialog_text)
@@ -154,7 +165,7 @@ public class HomeActivity extends FragmentActivity {
 			                startActivity(intent);
 			                finish();
 						} catch (Exception e) {
-							goMarket();
+							goMusubiOnMarket();
 						}
 					}
 				})
@@ -165,6 +176,14 @@ public class HomeActivity extends FragmentActivity {
 							}
 						});
 		musubiDialog.create().show();
+	}
+    
+	private void goMarket() {
+		// Go to Market
+		Uri uri = Uri.parse("market://details?id=com.kazuyayokoyama.android.apps.todobento");
+		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+		startActivity(intent);
+        finish();
 	}
 
 	private class TodoListAsyncTask extends AsyncTask<Void, Void, Boolean> {

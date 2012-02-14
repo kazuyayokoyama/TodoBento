@@ -16,6 +16,7 @@
 
 package com.kazuyayokoyama.android.apps.todobento.ui;
 
+import leoliang.tasks365.DraggableListView;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -31,8 +32,8 @@ import android.widget.TextView;
 
 import com.kazuyayokoyama.android.apps.todobento.R;
 import com.kazuyayokoyama.android.apps.todobento.io.BentoManager;
-import com.kazuyayokoyama.android.apps.todobento.ui.widget.SortableListView;
 import com.kazuyayokoyama.android.apps.todobento.util.BitmapHelper;
+import com.kazuyayokoyama.android.apps.todobento.util.ImageCache;
 import com.kazuyayokoyama.android.apps.todobento.util.UIUtils;
 
 public class TodoListItemAdapter extends ArrayAdapter<TodoListItem> {
@@ -43,16 +44,16 @@ public class TodoListItemAdapter extends ArrayAdapter<TodoListItem> {
 	private BentoManager mManager = BentoManager.getInstance();
 	private LayoutInflater mInflater;
 	private int mDraggingPosition = -1;
-	private SortableListView mSortableListView = null;
+	private DraggableListView mDraggableListView = null;
 	private Context mContext = null;
 
 	public TodoListItemAdapter(Context context, int resourceId,
-			SortableListView listView) {
+			DraggableListView listView) {
 		super(context, resourceId);
 		mContext = context;
 		mInflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		mSortableListView = listView;
+		mDraggableListView = listView;
 	}
 
 	@Override
@@ -100,7 +101,7 @@ public class TodoListItemAdapter extends ArrayAdapter<TodoListItem> {
 				item.modContactId = mManager.getLocalContactId();
 
 				CharSequence baseMsg;
-				Resources rsrc = mSortableListView.getResources();
+				Resources rsrc = mDraggableListView.getResources();
 				if (item.bDone) {
 					if (item.title.length() > 0) {
 						baseMsg = rsrc.getString(R.string.feed_msg_done, mManager.getLocalName(), item.title);
@@ -155,9 +156,9 @@ public class TodoListItemAdapter extends ArrayAdapter<TodoListItem> {
 
 				holder.imageView.setImageBitmap(
 						BitmapHelper.getDummyBitmap(IMG_WIDTH, IMG_HEIGHT));
-				ImageGetTask task = new ImageGetTask(holder.imageView);
-				task.execute(item.uuid);
-				/*
+				//ImageGetTask task = new ImageGetTask(holder.imageView);
+				//task.execute(item.uuid);
+				
 				Bitmap bitmap = ImageCache.getImage(item.uuid);
 				if (bitmap == null) {
 					holder.imageView.setImageBitmap(
@@ -168,7 +169,7 @@ public class TodoListItemAdapter extends ArrayAdapter<TodoListItem> {
 					holder.imageView.setImageBitmap(bitmap);
 					holder.imageView.setVisibility(View.VISIBLE);
 				}
-				*/
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -218,7 +219,7 @@ public class TodoListItemAdapter extends ArrayAdapter<TodoListItem> {
 				try {
 					Bitmap bitmap = mManager.getTodoBitmap(params[0], IMG_WIDTH, IMG_HEIGHT, 0);
 					if (bitmap != null) {
-						//ImageCache.setImage(params[0], bitmap);
+						ImageCache.setImage(params[0], bitmap);
 					}
 					return bitmap;
 				} catch (Exception e) {

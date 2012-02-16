@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 
-package com.kazuyayokoyama.android.apps.todobento.io;
+package mobisocial.bento.todo.io;
 
 import java.util.ArrayList;
 
+import mobisocial.bento.todo.ui.BentoListItem;
+import mobisocial.bento.todo.ui.TodoListItem;
+import mobisocial.bento.todo.util.BitmapHelper;
 import mobisocial.socialkit.Obj;
 import mobisocial.socialkit.musubi.DbFeed;
 import mobisocial.socialkit.musubi.DbObj;
@@ -38,9 +41,6 @@ import android.os.Handler;
 import android.util.Base64;
 import android.util.Log;
 
-import com.kazuyayokoyama.android.apps.todobento.ui.BentoListItem;
-import com.kazuyayokoyama.android.apps.todobento.ui.TodoListItem;
-import com.kazuyayokoyama.android.apps.todobento.util.BitmapHelper;
 
 public class BentoManager {
     public interface OnStateUpdatedListener {

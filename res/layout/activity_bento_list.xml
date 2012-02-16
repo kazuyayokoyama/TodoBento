@@ -20,7 +20,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <fragment android:name="com.kazuyayokoyama.android.apps.todobento.ui.BentoListFragment"
+    <fragment android:name="mobisocial.bento.todo.ui.BentoListFragment"
         android:id="@+id/fragment_bento_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

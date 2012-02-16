@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.kazuyayokoyama.android.apps.todobento.ui;
+package mobisocial.bento.todo.ui;
 
+import mobisocial.bento.todo.io.Bento;
 import android.net.Uri;
 
-import com.kazuyayokoyama.android.apps.todobento.io.Bento;
 
 public class BentoListItem {
 	public Bento bento;

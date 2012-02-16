@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kazuyayokoyama.android.apps.todobento.util;
+package mobisocial.bento.todo.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

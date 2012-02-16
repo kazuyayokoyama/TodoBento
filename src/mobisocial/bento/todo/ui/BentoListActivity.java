@@ -14,9 +14,14 @@
  * limitations under the License.
  */
 
-package com.kazuyayokoyama.android.apps.todobento.ui;
+package mobisocial.bento.todo.ui;
 
 import java.util.UUID;
+
+import mobisocial.bento.todo.io.Bento;
+import mobisocial.bento.todo.io.BentoManager;
+import mobisocial.bento.todo.io.BentoManager.OnStateUpdatedListener;
+import mobisocial.bento.todo.util.UIUtils;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -33,11 +38,7 @@ import android.view.View.OnFocusChangeListener;
 import android.view.WindowManager;
 import android.widget.EditText;
 
-import com.kazuyayokoyama.android.apps.todobento.R;
-import com.kazuyayokoyama.android.apps.todobento.io.Bento;
-import com.kazuyayokoyama.android.apps.todobento.io.BentoManager;
-import com.kazuyayokoyama.android.apps.todobento.io.BentoManager.OnStateUpdatedListener;
-import com.kazuyayokoyama.android.apps.todobento.util.UIUtils;
+import mobisocial.bento.todo.R;
 
 public class BentoListActivity extends FragmentActivity {
 	//private static final String TAG = "BentoListActivity";

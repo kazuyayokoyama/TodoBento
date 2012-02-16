@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package com.kazuyayokoyama.android.apps.todobento.ui;
+package mobisocial.bento.todo.ui;
 
+import mobisocial.bento.todo.io.BentoManager;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -27,8 +28,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.kazuyayokoyama.android.apps.todobento.R;
-import com.kazuyayokoyama.android.apps.todobento.io.BentoManager;
+import mobisocial.bento.todo.R;
 
 public class BentoListFragment extends ListFragment {
     //private static final String TAG = "BentoListFragment";

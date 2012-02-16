@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kazuyayokoyama.android.apps.todobento.ui;
+package mobisocial.bento.todo.ui;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,6 +22,12 @@ import java.util.UUID;
 
 import leoliang.tasks365.DraggableListView;
 import leoliang.tasks365.DraggableListView.DropListener;
+import mobisocial.bento.todo.io.BentoManager;
+import mobisocial.bento.todo.ui.widget.SortableListView;
+import mobisocial.bento.todo.util.BitmapHelper;
+import mobisocial.bento.todo.util.ImageCache;
+import mobisocial.bento.todo.util.JpgFileHelper;
+import mobisocial.bento.todo.util.UIUtils;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -48,13 +54,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import com.kazuyayokoyama.android.apps.todobento.R;
-import com.kazuyayokoyama.android.apps.todobento.io.BentoManager;
-import com.kazuyayokoyama.android.apps.todobento.ui.widget.SortableListView;
-import com.kazuyayokoyama.android.apps.todobento.util.BitmapHelper;
-import com.kazuyayokoyama.android.apps.todobento.util.ImageCache;
-import com.kazuyayokoyama.android.apps.todobento.util.JpgFileHelper;
-import com.kazuyayokoyama.android.apps.todobento.util.UIUtils;
+import mobisocial.bento.todo.R;
 
 public class TodoListFragment extends ListFragment {
     public interface OnBentoSelectedListener {

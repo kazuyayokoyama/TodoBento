@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="com.kazuyayokoyama.android.apps.todobento"
-      android:versionCode="2"
-      android:versionName="1.1.0">
+      package="mobisocial.bento.todo"
+      android:versionCode="3"
+      android:versionName="1.2.0">
       
     <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="15" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -37,7 +37,7 @@
             android:label="@string/label_todo_list" />
 
         <activity
-            android:name=".ui.TodoDetailActivity"
+            android:name="mobisocial.bento.todo.ui.TodoDetailActivity"
             android:label="@string/label_todo_detail" />
 
     </application>

@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package com.kazuyayokoyama.android.apps.todobento.ui;
+package mobisocial.bento.todo.ui;
 
+import mobisocial.bento.todo.io.BentoManager;
+import mobisocial.bento.todo.util.ImageCache;
 import mobisocial.socialkit.musubi.Musubi;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -31,12 +33,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
-import com.kazuyayokoyama.android.apps.todobento.R;
-import com.kazuyayokoyama.android.apps.todobento.io.BentoManager;
-import com.kazuyayokoyama.android.apps.todobento.util.ImageCache;
+import mobisocial.bento.todo.R;
 
 public class HomeActivity extends FragmentActivity {
-	public static final String EXTRA_TODO = "com.kazuyayokoyama.android.apps.todobento.extra.EXTRA_TODO";
+	public static final String EXTRA_TODO = "mobisocial.bento.todo.extra.EXTRA_TODO";
 
 	//private static final String TAG = "HomeActivity";
 	private static final int REQUEST_TODO_LIST = 0;
@@ -87,7 +87,7 @@ public class HomeActivity extends FragmentActivity {
 				int versionCode = 0;
 				try {
 					PackageInfo packageInfo = getPackageManager().getPackageInfo(
-							"com.kazuyayokoyama.android.apps.todobento", PackageManager.GET_META_DATA);
+							"mobisocial.bento.todo", PackageManager.GET_META_DATA);
 					versionCode = packageInfo.versionCode;
 				} catch (NameNotFoundException e) {
 				    e.printStackTrace();
@@ -180,7 +180,7 @@ public class HomeActivity extends FragmentActivity {
     
 	private void goMarket() {
 		// Go to Market
-		Uri uri = Uri.parse("market://details?id=com.kazuyayokoyama.android.apps.todobento");
+		Uri uri = Uri.parse("market://details?id=mobisocial.bento.todo");
 		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 		startActivity(intent);
         finish();

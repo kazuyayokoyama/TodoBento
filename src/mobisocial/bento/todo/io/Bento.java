@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package com.kazuyayokoyama.android.apps.todobento.io;
+package mobisocial.bento.todo.io;
 
 import java.util.ArrayList;
 
-import com.kazuyayokoyama.android.apps.todobento.ui.TodoListItem;
+import mobisocial.bento.todo.ui.TodoListItem;
+
 
 public class Bento {
 	public String uuid;

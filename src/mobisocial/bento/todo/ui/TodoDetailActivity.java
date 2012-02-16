@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kazuyayokoyama.android.apps.todobento.ui;
+package mobisocial.bento.todo.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,7 +24,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
 
-import com.kazuyayokoyama.android.apps.todobento.R;
+import mobisocial.bento.todo.R;
 
 public class TodoDetailActivity extends FragmentActivity {
 	private TodoDetailFragment mTodoDetailFragment = null;

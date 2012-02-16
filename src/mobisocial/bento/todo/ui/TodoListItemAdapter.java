@@ -14,9 +14,13 @@
  * limitations under the License.
  */
 
-package com.kazuyayokoyama.android.apps.todobento.ui;
+package mobisocial.bento.todo.ui;
 
 import leoliang.tasks365.DraggableListView;
+import mobisocial.bento.todo.io.BentoManager;
+import mobisocial.bento.todo.util.BitmapHelper;
+import mobisocial.bento.todo.util.ImageCache;
+import mobisocial.bento.todo.util.UIUtils;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -30,11 +34,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.kazuyayokoyama.android.apps.todobento.R;
-import com.kazuyayokoyama.android.apps.todobento.io.BentoManager;
-import com.kazuyayokoyama.android.apps.todobento.util.BitmapHelper;
-import com.kazuyayokoyama.android.apps.todobento.util.ImageCache;
-import com.kazuyayokoyama.android.apps.todobento.util.UIUtils;
+import mobisocial.bento.todo.R;
 
 public class TodoListItemAdapter extends ArrayAdapter<TodoListItem> {
 	//private static final String TAG = "TodoListItemAdapter";

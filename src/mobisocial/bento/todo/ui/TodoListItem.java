@@ -14,29 +14,16 @@
  * limitations under the License.
  */
 
-package com.kazuyayokoyama.android.apps.todobento.util;
+package mobisocial.bento.todo.ui;
 
-import java.util.HashMap;
-
-import android.graphics.Bitmap;
-
-public class ImageCache {
-
-	private static HashMap<String, Bitmap> sCache = new HashMap<String, Bitmap>();
-
-	public static Bitmap getImage(String key) {
-		if (sCache.containsKey(key)) {
-			return sCache.get(key);
-		}
-		return null;
-	}
-
-	public static void setImage(String key, Bitmap image) {
-		sCache.put(key, image);
-	}
-
-	public static void clearCache() {
-		sCache = null;
-		sCache = new HashMap<String, Bitmap>();
-	}
+public class TodoListItem {
+	public String uuid;
+	public Boolean bDone;
+	public String title;
+	public String description;
+	public boolean hasImage;
+	public long creDateMillis;
+	public long modDateMillis;
+	public String creContactId;
+	public String modContactId;
 }

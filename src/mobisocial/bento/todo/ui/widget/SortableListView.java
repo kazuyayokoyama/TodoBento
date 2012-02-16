@@ -18,7 +18,7 @@
  * 
  */
 
-package com.kazuyayokoyama.android.apps.todobento.ui.widget;
+package mobisocial.bento.todo.ui.widget;
 
 import android.content.Context;
 import android.graphics.Bitmap;

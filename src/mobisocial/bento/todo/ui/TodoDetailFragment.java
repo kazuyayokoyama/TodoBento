@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package com.kazuyayokoyama.android.apps.todobento.ui;
+package mobisocial.bento.todo.ui;
 
+import mobisocial.bento.todo.io.BentoManager;
+import mobisocial.bento.todo.util.UIUtils;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -31,12 +33,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.kazuyayokoyama.android.apps.todobento.R;
-import com.kazuyayokoyama.android.apps.todobento.io.BentoManager;
-import com.kazuyayokoyama.android.apps.todobento.util.UIUtils;
+import mobisocial.bento.todo.R;
 
 public class TodoDetailFragment extends Fragment {
-	public static final String EXTRA_TODO_UUID = "com.kazuyayokoyama.android.apps.todobento.extra.EXTRA_TODO_UUID";
+	public static final String EXTRA_TODO_UUID = "mobisocial.bento.todo.extra.EXTRA_TODO_UUID";
 
 	private static final String TAG = "TodoDetailFragment";
 	private static final int IMG_WIDTH = 320;

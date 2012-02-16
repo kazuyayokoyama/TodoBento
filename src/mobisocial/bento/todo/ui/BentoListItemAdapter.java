@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package com.kazuyayokoyama.android.apps.todobento.ui;
+package mobisocial.bento.todo.ui;
 
+import mobisocial.bento.todo.io.BentoManager;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,8 +25,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.kazuyayokoyama.android.apps.todobento.R;
-import com.kazuyayokoyama.android.apps.todobento.io.BentoManager;
+import mobisocial.bento.todo.R;
 
 public class BentoListItemAdapter extends ArrayAdapter<BentoListItem> {
 	//private static final String TAG = "BentoListItemAdapter";

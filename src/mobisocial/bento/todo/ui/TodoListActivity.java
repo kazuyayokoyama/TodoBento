@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
-package com.kazuyayokoyama.android.apps.todobento.ui;
+package mobisocial.bento.todo.ui;
 
+import mobisocial.bento.todo.io.BentoManager;
+import mobisocial.bento.todo.io.BentoManager.OnStateUpdatedListener;
+import mobisocial.bento.todo.ui.TodoListFragment.OnBentoSelectedListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ActionBar;
@@ -24,10 +27,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
 
-import com.kazuyayokoyama.android.apps.todobento.R;
-import com.kazuyayokoyama.android.apps.todobento.io.BentoManager;
-import com.kazuyayokoyama.android.apps.todobento.io.BentoManager.OnStateUpdatedListener;
-import com.kazuyayokoyama.android.apps.todobento.ui.TodoListFragment.OnBentoSelectedListener;
+import mobisocial.bento.todo.R;
 
 public class TodoListActivity extends FragmentActivity implements OnBentoSelectedListener {
 	public static final String EXTRA_LAUNCHED_FROM_BENTO_LIST = "launched_from_bento_list";

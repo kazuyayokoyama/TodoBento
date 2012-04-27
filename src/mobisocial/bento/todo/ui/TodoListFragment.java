@@ -22,8 +22,8 @@ import java.util.UUID;
 
 import leoliang.tasks365.DraggableListView;
 import leoliang.tasks365.DraggableListView.DropListener;
+import mobisocial.bento.todo.R;
 import mobisocial.bento.todo.io.BentoManager;
-import mobisocial.bento.todo.ui.widget.SortableListView;
 import mobisocial.bento.todo.util.BitmapHelper;
 import mobisocial.bento.todo.util.ImageCache;
 import mobisocial.bento.todo.util.JpgFileHelper;
@@ -44,6 +44,7 @@ import android.provider.MediaStore;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.SupportActivity;
 import android.support.v4.view.MenuItem;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
@@ -54,21 +55,19 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import mobisocial.bento.todo.R;
-
 public class TodoListFragment extends ListFragment {
     public interface OnBentoSelectedListener {
         public void onBentoSelected();
     }
-    
-    //private static final String TAG = "TodoListFragment";
+
+	private static final Boolean DEBUG = true;
+    private static final String TAG = "TodoListFragment";
 	private static final int REQUEST_IMAGE_CAPTURE = 0;
 	private static final int REQUEST_GALLERY = 1;
     
 	private BentoManager mManager = BentoManager.getInstance();
 	private TodoListItemAdapter mListAdapter = null;
 	private DraggableListView mListView = null;
-	private boolean mSorted = false;
     private OnBentoSelectedListener mListener;
 
 	@Override
@@ -83,6 +82,7 @@ public class TodoListFragment extends ListFragment {
         mListView.setDropListener(new DropListener() {
             @Override
             public void drop(int from, int to) {
+            	if (DEBUG) Log.d(TAG, "drop - from:" + from + " to:" + to);
                 if (from == to) {
                     return;
                 }
@@ -327,7 +327,7 @@ public class TodoListFragment extends ListFragment {
 			listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 					BentoListItem item = mManager.getBentoListItem(position);
-					mManager.setDbFeed(item.feedUri);
+					mManager.setBentoObjUri(item.objUri);
 					
 					mBentoListDialog.dismiss();
 
@@ -434,51 +434,4 @@ public class TodoListFragment extends ListFragment {
 			}
 		}
 	}
-	
-	private void sortCompleted() {
-		StringBuilder msg = new StringBuilder(
-				getString(R.string.feed_msg_sorted, mManager.getLocalName()));
-		String htmlMsg = UIUtils.getHtmlString(mManager.getBentoListItem().bento.name, msg.toString());
-		
-        mManager.sortTodoCompleted(htmlMsg);
-	}
-	
-	class DragListener extends SortableListView.SimpleDragListener {
-        @Override
-        public int onStartDrag(int position) {
-        	mSorted = false;
-            mListAdapter.setDraggingPosition(position);
-            refreshView();
-            return position;
-        }
-        
-        @Override
-        public int onDuringDrag(int positionFrom, int positionTo) {
-            if (positionFrom < 0 || positionTo < 0
-                    || positionFrom == positionTo) {
-                return positionFrom;
-            }
-            
-            // sort
-            mManager.sortTodoList(positionFrom, positionTo);
-            mSorted = true;
-
-            mListAdapter.setDraggingPosition(positionTo);
-            refreshView();
-            return positionTo;
-        }
-        
-        @Override
-        public boolean onStopDrag(int positionFrom, int positionTo) {
-            mListAdapter.setDraggingPosition(-1);
-            refreshView();
-
-            if (mSorted) {
-            	sortCompleted();
-            }
-            mSorted = false;
-	        
-            return super.onStopDrag(positionFrom, positionTo);
-        }
-    }
 }

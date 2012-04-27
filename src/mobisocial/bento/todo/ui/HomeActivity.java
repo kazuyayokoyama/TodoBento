@@ -16,6 +16,7 @@
 
 package mobisocial.bento.todo.ui;
 
+import mobisocial.bento.todo.R;
 import mobisocial.bento.todo.io.BentoManager;
 import mobisocial.bento.todo.util.ImageCache;
 import mobisocial.socialkit.musubi.Musubi;
@@ -32,8 +33,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-
-import mobisocial.bento.todo.R;
+import android.util.Log;
 
 public class HomeActivity extends FragmentActivity {
 	public static final String EXTRA_TODO = "mobisocial.bento.todo.extra.EXTRA_TODO";
@@ -48,53 +48,45 @@ public class HomeActivity extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		// Check if Musubi is installed
+		boolean bInstalled = false;
+		try {
+			bInstalled = Musubi.isMusubiInstalled(getApplication());
+		} catch (Exception e) {
+			// be quiet
+			bInstalled = false;
+		}
+		if (!bInstalled) {
+			goMusubiOnMarket();
+			return;
+		}
+
+		Intent intent = getIntent();
+		// Check if this activity launched from internal activity
+		if (intent.hasExtra(EXTRA_TODO)) {
+			// nothing to do for Musubi
+			return;
+		}
+		// create Musubi Instance
+		mMusubi = Musubi.forIntent(this, intent);
 		
-		// Check if this activity launched from Home Screen
-		if (!Musubi.isMusubiIntent(getIntent())) {
-			boolean bInstalled = false;
-			try {
-				bInstalled = Musubi.isMusubiInstalled(getApplication());
-			} catch (Exception e) {
-				// be quiet
-				bInstalled = false;
-			}
-			// Check if Musubi is installed
-			if (bInstalled) {
-				goMusubi();
-			} else {
-				goMusubiOnMarket();
-			}
+		// Check if this activity launched from apps feed
+		if (mMusubi == null) {
+			// go to market
+			goMarket();
 		} else {
-	
-			// Check if this activity launched from internal activity
-			if (getIntent().hasExtra(EXTRA_TODO)) {
-				// nothing to do for Musubi
-				return;
+			// get version code
+			int versionCode = 0;
+			try {
+				PackageInfo packageInfo = getPackageManager().getPackageInfo(
+						"mobisocial.bento.todo", PackageManager.GET_META_DATA);
+				versionCode = packageInfo.versionCode;
+			} catch (NameNotFoundException e) {
+			    e.printStackTrace();
 			}
 			
-			// create Musubi Instance
-			Intent intent = getIntent();
-			mMusubi = Musubi.getInstance(this);
-			
-			// Check iif this activity launched from apps feed
-			if (mMusubi == null || mMusubi.getObj() == null || mMusubi.getObj().getSubfeed() == null) {
-				// go to market
-				goMarket();
-				
-			} else {
-				
-				// get version code
-				int versionCode = 0;
-				try {
-					PackageInfo packageInfo = getPackageManager().getPackageInfo(
-							"mobisocial.bento.todo", PackageManager.GET_META_DATA);
-					versionCode = packageInfo.versionCode;
-				} catch (NameNotFoundException e) {
-				    e.printStackTrace();
-				}
-				
-				new TodoListAsyncTask(this, (Uri) intent.getParcelableExtra(Musubi.EXTRA_FEED_URI), versionCode).execute();
-			}
+			new TodoListAsyncTask(this, (Uri) intent.getParcelableExtra(Musubi.EXTRA_FEED_URI), versionCode).execute();
 		}
 	}
 
@@ -160,7 +152,7 @@ public class HomeActivity extends FragmentActivity {
 						try {
 							// Launching Musubi
 			                Intent intent = new Intent(Intent.ACTION_MAIN);
-			                intent.setClassName("edu.stanford.mobisocial.dungbeetle", "edu.stanford.mobisocial.dungbeetle.ui.FeedListActivity"); 
+			                intent.setClassName("mobisocial.musubi", "mobisocial.musubi.ui.FeedListActivity"); 
 			                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); 
 			                startActivity(intent);
 			                finish();

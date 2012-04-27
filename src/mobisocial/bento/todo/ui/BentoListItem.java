@@ -22,7 +22,7 @@ import android.net.Uri;
 
 public class BentoListItem {
 	public Bento bento;
-	public Uri feedUri;
+	public Uri objUri;
 	
 	public BentoListItem() {
 		bento = new Bento();

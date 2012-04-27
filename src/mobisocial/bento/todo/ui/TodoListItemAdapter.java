@@ -17,6 +17,7 @@
 package mobisocial.bento.todo.ui;
 
 import leoliang.tasks365.DraggableListView;
+import mobisocial.bento.todo.R;
 import mobisocial.bento.todo.io.BentoManager;
 import mobisocial.bento.todo.util.BitmapHelper;
 import mobisocial.bento.todo.util.ImageCache;
@@ -25,6 +26,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,10 +36,9 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import mobisocial.bento.todo.R;
-
 public class TodoListItemAdapter extends ArrayAdapter<TodoListItem> {
-	//private static final String TAG = "TodoListItemAdapter";
+	private static final Boolean DEBUG = false;
+	private static final String TAG = "TodoListItemAdapter";
 	private static final int IMG_WIDTH = 160;
 	private static final int IMG_HEIGHT = 160;
 
@@ -59,6 +60,7 @@ public class TodoListItemAdapter extends ArrayAdapter<TodoListItem> {
 	@Override
 	public int getCount() {
 		int count = mManager.getTodoListCount();
+		if (DEBUG) Log.d(TAG, "getCount: " + count);
 		return count;
 	}
 

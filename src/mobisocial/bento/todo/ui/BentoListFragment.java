@@ -69,7 +69,7 @@ public class BentoListFragment extends ListFragment {
     @Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		BentoListItem item = mManager.getBentoListItem(position);
-		mManager.setDbFeed(item.feedUri);
+		mManager.setBentoObjUri(item.objUri);
 		
 		// Intent
 		Intent intent = new Intent(getActivity(), TodoListActivity.class);

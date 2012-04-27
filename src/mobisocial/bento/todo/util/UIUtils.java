@@ -45,17 +45,10 @@ public class UIUtils {
     }
 
     public static String getHtmlString(String bentoName, String msg) {
-        StringBuilder html = new StringBuilder("<html><head><style>");
-        //html.append("body { font-family:Verdana; }");
-        html.append("td { border:0px min-width:10px; }");
-        html.append("table { background-color:#00FFFFFF; padding:1px;}");
-        html.append("</style></head>");
-        html.append("<body><div><table><tr>");
-        html.append("<td><b>").append(bentoName).append("</b></td>");
-        html.append("</tr><tr>");
-        html.append("<td>").append(msg).append("</td>");
-        html.append("</tr></table></body></div>");
-        html.append("</html>");
+        StringBuilder html = new StringBuilder("<html><body style=\"width:150px;\">");
+        html.append("<div style=\"font-weight:bold;\">").append(bentoName).append("</div>");
+        html.append("<div>").append(msg).append("</div>");
+        html.append("</body></html>");
         return html.toString();
     }
 }

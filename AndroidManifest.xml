@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="mobisocial.bento.todo"
-      android:versionCode="3"
-      android:versionName="1.2.0">
+      android:versionCode="4"
+      android:versionName="2.0.0">
       
     <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="15" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -19,12 +19,14 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="musubi.intent.category.MENU" />
+                <category android:name="musubi.intent.category.DEFAULT" />
             </intent-filter>
             
             <intent-filter>
-                <action android:name="mobisocial.intent.action.CONNECTED" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.musubi.obj/todobento"/>
             </intent-filter>
         </activity>
 
@@ -37,7 +39,7 @@
             android:label="@string/label_todo_list" />
 
         <activity
-            android:name="mobisocial.bento.todo.ui.TodoDetailActivity"
+            android:name=".ui.TodoDetailActivity"
             android:label="@string/label_todo_detail" />
 
     </application>

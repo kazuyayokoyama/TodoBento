@@ -26,6 +26,7 @@ import mobisocial.socialkit.musubi.DbFeed;
 import mobisocial.socialkit.musubi.DbObj;
 import mobisocial.socialkit.musubi.FeedObserver;
 import mobisocial.socialkit.musubi.Musubi;
+import mobisocial.socialkit.musubi.Musubi.DbThing;
 import mobisocial.socialkit.musubi.multiplayer.FeedRenderable;
 import mobisocial.socialkit.obj.MemObj;
 
@@ -47,8 +48,9 @@ public class BentoManager {
         public void onStateUpdated();
     }
 
-	public static final String TYPE_APP_STATE = "appstate";
-	public static final String TYPE_APP = "app";
+	public static final String TYPE_TODOBENTO = "todobento";
+	public static final String TYPE_APPSTATE = "appstate";
+	//public static final String TYPE_APP = "app";
 
 	// root > state
 	public static final String STATE = "state";
@@ -72,12 +74,17 @@ public class BentoManager {
 	// root > state > todo_image
 	public static final String TODO_IMAGE = "todo_image";
 	public static final String TODO_IMAGE_UUID = "todo_image_uuid";
-	public static final String B64JPGTHUMB = "b64jpgthumb";
+	public static final String B64JPGTHUMB = FeedRenderable.OBJ_B64_JPEG;
 	
+	private class LatestObj {
+		public JSONObject json = null;
+		public int intKey = 0;
+	};
+	private static final Boolean DEBUG = false;
 	private static final String TAG = "TodoDataManager";
 	private static BentoManager sInstance = null;
 	private Musubi mMusubi = null;
-	private DbFeed mDbFeed = null;
+	private Uri mCurrentUri = null;
 	private Uri mBaseUri = null;
 	private String mLocalContactId = null;
 	private String mLocalName = null;
@@ -109,11 +116,17 @@ public class BentoManager {
 		mVersionCode = versionCode;
 		mLocalContactId = mMusubi.userForLocalDevice(mBaseUri).getId();
 		mLocalName = mMusubi.userForLocalDevice(mBaseUri).getName();
-		setDbFeed(mMusubi.getObj().getSubfeed());
+		if (mMusubi.getObj() != null && mMusubi.getObj().getSubfeed() != null) {
+			setBentoObjUri(mMusubi.getObj().getUri());
+		}
 	}
 
 	public void fin() {
-        mDbFeed.removeStateObserver(mStateObserver);
+		if (DEBUG) Log.d(TAG, "fin()");
+		
+		if (mCurrentUri != null) {
+			mMusubi.objForUri(mCurrentUri).getSubfeed().unregisterStateObserver(mStateObserver);
+		}
 		mBentoList = null;
 		mBento = null;
 
@@ -154,12 +167,14 @@ public class BentoManager {
 	
 	synchronized public Bitmap getTodoBitmap(String todoUuid,
 			int targetWidth, int targetHeight, float degrees) {
-		return getTodoBitmap(mDbFeed, todoUuid, targetWidth, targetHeight, degrees);
+		return getTodoBitmap(mCurrentUri, todoUuid, targetWidth, targetHeight, degrees);
 	}
 	
-	synchronized public Bitmap getTodoBitmap(DbFeed dbFeed, String todoUuid,
+	synchronized public Bitmap getTodoBitmap(Uri objUri, String todoUuid,
 			int targetWidth, int targetHeight, float degrees) {
 		Bitmap bitmap = null;
+		
+		DbFeed dbFeed = mMusubi.objForUri(objUri).getSubfeed();
 
 		Cursor c = dbFeed.query();
 		c.moveToFirst();
@@ -194,12 +209,13 @@ public class BentoManager {
 
 	// Bento List
 	synchronized public void loadBentoList() {
-        String[] projection = null;
-        String selection = "type = ? AND feed_name = ?";
-        String[] selectionArgs = new String[] { TYPE_APP, mMusubi.getObj().getFeedName() };
-        String sortOrder = null;
+        String[] projection = new String[] { DbObj.COL_ID, DbObj.COL_FEED_ID };;
+        Uri uri = Musubi.uriForDir(DbThing.OBJECT);
+        String selection = "type = ?";
+        String[] selectionArgs = new String[] { TYPE_TODOBENTO };
+        String sortOrder = DbObj.COL_LAST_MODIFIED_TIMESTAMP + " asc";
         
-		Cursor c = mMusubi.getAppFeed().query(projection, selection, selectionArgs, sortOrder);
+		Cursor c = mMusubi.getContext().getContentResolver().query(uri, projection, selection, selectionArgs, sortOrder);
 
 		if (c != null && c.moveToFirst()) {
 			mBentoList = new ArrayList<BentoListItem>();
@@ -209,16 +225,17 @@ public class BentoManager {
 				item.bento = new Bento();
 				
 				DbObj dbObj = mMusubi.objForCursor(c);
-				DbFeed dbFeed = dbObj.getSubfeed();
-				Obj latestObj = dbFeed.getLatestObj();
-				if (latestObj != null && latestObj.getJson() != null && latestObj.getJson().has(STATE)) {
-					JSONObject stateObj = latestObj.getJson().optJSONObject(STATE);
-					if (fetchBentoObj(dbFeed, stateObj, item.bento)) {
-						item.feedUri = dbFeed.getUri();
-
+				LatestObj latestObj = null;
+				
+				latestObj = fetchLatestObj(c.getLong(0));
+				if (latestObj != null && latestObj.json.has(STATE)) {
+					JSONObject stateObj = latestObj.json.optJSONObject(STATE);
+					if (fetchBentoObj(stateObj, item.bento)) {
+						item.objUri = dbObj.getUri();
+					
 						// count number of todo
 						ArrayList<TodoListItem> todoList = new ArrayList<TodoListItem>();
-						if (fetchTodoListObj(dbFeed, stateObj, todoList)) {
+						if (fetchTodoListObj(stateObj, todoList)) {
 							item.bento.numberOfTodo = todoList.size();
 							mBentoList.add(0, item);
 						}
@@ -229,6 +246,46 @@ public class BentoManager {
 		}
 		c.close();
 	}
+	
+	private LatestObj fetchLatestObj(long localId) {
+        Uri uri = Musubi.uriForDir(DbThing.OBJECT);
+        String[] projection = new String[] { DbObj.COL_JSON, DbObj.COL_INT_KEY };
+        String selection = DbObj.COL_PARENT_ID + "=? and type= ?";
+        String[] selectionArgs = new String[] { Long.toString(localId), TYPE_APPSTATE };
+        String sortOrder = DbObj.COL_INT_KEY + " desc limit 1";
+        Cursor c = mMusubi.getContext().getContentResolver().query(uri, projection, selection, selectionArgs, sortOrder);
+        try {
+            if (c.moveToFirst()) {
+            	LatestObj latestObj = new LatestObj();
+            	try {
+					latestObj.json = new JSONObject(c.getString(0));
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+            	latestObj.intKey = c.getInt(1);
+                return latestObj;
+            } else {
+                c.close();
+                selection = DbObj.COL_ID + "=?";
+                selectionArgs = new String[] { Long.toString(localId) };
+                c = mMusubi.getContext().getContentResolver().query(uri, projection, selection, selectionArgs, sortOrder);
+                if (c.moveToFirst()) {
+                	LatestObj latestObj = new LatestObj();
+                	try {
+						latestObj.json = new JSONObject(c.getString(0));
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+                	latestObj.intKey = c.getInt(1);
+                    return latestObj;
+                } else {
+                    return null;
+                }
+            }
+        } finally {
+            c.close();
+        }
+    }
 	
 	synchronized public BentoListItem getBentoListItem(int position) {
 		return mBentoList.get(position);
@@ -244,7 +301,7 @@ public class BentoManager {
 	synchronized public void createBento(Bento bento, String htmlMsg) {
 		mBento = new BentoListItem();
 		mBento.bento = bento;
-		pushUpdate(htmlMsg);
+		pushUpdate(htmlMsg, true);
 	}
 	
 	synchronized public void addTodo(TodoListItem item, Bitmap image, String htmlMsg) {
@@ -254,7 +311,7 @@ public class BentoManager {
 			pushUpdate(htmlMsg);
 		} else {
 			String data = Base64.encodeToString(BitmapHelper.bitmapToBytes(image), Base64.DEFAULT);
-			pushUpdate(htmlMsg, item.uuid, data);
+			pushUpdate(htmlMsg, item.uuid, data, false);
 		}
 	}
 
@@ -278,12 +335,30 @@ public class BentoManager {
 	synchronized public void sortTodoList(int positionFrom, int positionTo) {
 		TodoListItem item = mBento.bento.todoList.get(positionFrom);
 		
+		// debug
+		if (DEBUG) {
+			Log.d(TAG, "sortTodoList:BEFORE");
+			for (int i=0; i<mBento.bento.todoList.size(); i++) {
+				TodoListItem debugItem = mBento.bento.todoList.get(i);
+				Log.d(TAG, i + ":" + debugItem.title);
+			}
+		}
+		
 		if (positionFrom < positionTo) {
-			mBento.bento.todoList.add(positionTo, item);
+			mBento.bento.todoList.add((positionTo + 1), item);
 			mBento.bento.todoList.remove(positionFrom);
 		} else if (positionFrom > positionTo) {
 			mBento.bento.todoList.remove(positionFrom);
 			mBento.bento.todoList.add(positionTo, item);
+		}
+
+		// debug
+		if (DEBUG) {
+			Log.d(TAG, "sortTodoList:AFTER");
+			for (int i=0; i<mBento.bento.todoList.size(); i++) {
+				TodoListItem debugItem = mBento.bento.todoList.get(i);
+				Log.d(TAG, i + ":" + debugItem.title);
+			}
 		}
 	}
 
@@ -326,13 +401,19 @@ public class BentoManager {
 	// Musubi
 	// ----------------------------------------------------------
 	public void pushUpdate(String htmlMsg) {
-		pushUpdate(htmlMsg, null, null);
+		pushUpdate(htmlMsg, null, null, false);
+	}
+	
+	public void pushUpdate(String htmlMsg, boolean bFirst) {
+		pushUpdate(htmlMsg, null, null, bFirst);
 	}
 
-	public void pushUpdate(String htmlMsg, String todoUuid, String data) {
+	public void pushUpdate(String htmlMsg, String todoUuid, String data, boolean bFirst) {
 		try {
 			JSONObject rootObj = new JSONObject();
+			rootObj.put(Obj.FIELD_RENDER_TYPE, Obj.RENDER_LATEST);
 			rootObj.put(STATE, getStateObj());
+			if (DEBUG) Log.d(TAG, "pushUpdate - getStateObj():" + getStateObj().toString());
 			
 			JSONObject out = new JSONObject(rootObj.toString());
 
@@ -344,64 +425,66 @@ public class BentoManager {
 			}
 			
 			FeedRenderable renderable = FeedRenderable.fromHtml(htmlMsg);
-			renderable.withJson(out);
-			mDbFeed.postObj(new MemObj(TYPE_APP_STATE, out, null, ++mLastInt));
+			renderable.addToJson(out);
+			if (bFirst) {
+				Obj obj = new MemObj(TYPE_TODOBENTO, out, null);
+				Uri bentoUri = mMusubi.getFeed().insert(obj);
+				setBentoObjUri(bentoUri);
+			} else {
+				Obj obj = new MemObj(TYPE_APPSTATE, out, null, ++mLastInt);
+				mMusubi.objForUri(mCurrentUri).getSubfeed().postObj(obj);
+			}
 		} catch (JSONException e) {
 			Log.e(TAG, "Failed to post JSON", e);
 		}
 	}
 
-	public void setDbFeed(Uri feedUri) {
-		setDbFeed(mMusubi.getFeed(feedUri));
-	}
-	
-	public void setDbFeed(DbFeed dbFeed) {
-		// previous feed
-		if (mDbFeed != null) {
-			mDbFeed.removeStateObserver(mStateObserver);
+	public void setBentoObjUri(Uri objUri) {
+		// previous uri
+		if (mCurrentUri != null) {
+			mMusubi.objForUri(mCurrentUri).getSubfeed().unregisterStateObserver(mStateObserver);
 		}
         
-        // new feed
-		mDbFeed = dbFeed;
+        // new uri
+		mCurrentUri = objUri;
+		
+		DbObj dbObj = mMusubi.objForUri(objUri);
+		Long localId = dbObj.getLocalId();
+		
+		LatestObj latestObj = null;
+		latestObj = fetchLatestObj(localId);
+		if (latestObj != null && latestObj.json.has(STATE)) {
+			JSONObject stateObj = latestObj.json.optJSONObject(STATE);
 
-        String[] projection = null;
-        String selection = "type = ?";
-        String[] selectionArgs = new String[] { TYPE_APP_STATE };
-        String sortOrder = DbObj.COL_KEY_INT + " desc";
-        mDbFeed.setQueryArgs(projection, selection, selectionArgs, sortOrder);
-        
-        mDbFeed.registerStateObserver(mStateObserver);
-
-		// json
-		JSONObject stateObj = null;
-		Obj obj = mDbFeed.getLatestObj();
-		if (obj != null && obj.getJson() != null && obj.getJson().has(STATE)) {
-			stateObj = obj.getJson().optJSONObject(STATE);
+			if (stateObj == null) {
+				mBento = null;
+				mLastInt = 0;
+			} else {
+				setNewStateObj(stateObj);
+				mLastInt = latestObj.intKey;
+			}
 		}
-
-		if (stateObj == null) {
-			mBento = null;
-			mLastInt = 0;
-		} else {
-			setNewStateObj(stateObj);
-			mLastInt = (obj.getInt() == null) ? 0 : obj.getInt();
-		}
+		
+		mMusubi.objForUri(mCurrentUri).getSubfeed().registerStateObserver(mStateObserver);
 	}
 	
 	private final FeedObserver mStateObserver = new FeedObserver() {
 		@Override
 		public void onUpdate(DbObj obj) {
+			
+			if (DEBUG) Log.d(TAG, "onUpdate:" + obj.toString());
 
-			mLastInt = (obj.getInt() == null) ? 0 : obj.getInt();
+			mLastInt = (obj.getIntKey() == null) ? 0 : obj.getIntKey();
+			if (DEBUG) Log.d(TAG, "onUpdate - mLastInt: " + mLastInt);
 
 			JSONObject stateObj = null;
 			if (obj != null && obj.getJson() != null && obj.getJson().has(STATE)) {
 				stateObj = obj.getJson().optJSONObject(STATE);
+				setNewStateObj(stateObj);
 
 				try {
 					// TODO : just in case
-					if (! isValidBento(stateObj.getJSONObject(BENTO).optString(BENTO_UUID))) {
-
+					if (isValidBento(stateObj.getJSONObject(BENTO).optString(BENTO_UUID))) {
 						Handler handler = new Handler();
 						handler.post(new Runnable(){
 							public void run(){
@@ -418,16 +501,6 @@ public class BentoManager {
 					return;
 				}
 				
-				setNewStateObj(stateObj);
-
-				Handler handler = new Handler();
-				handler.post(new Runnable(){
-					public void run(){
-						for (OnStateUpdatedListener listener : mListenerList) {
-							listener.onStateUpdated();
-						}
-					}
-				});
 			} else {
 				return;
 			}
@@ -445,10 +518,10 @@ public class BentoManager {
 	}
 	
 	private void setNewBentoObj(JSONObject stateObj) {
-		fetchBentoObj(mDbFeed, stateObj, mBento.bento);
+		fetchBentoObj(stateObj, mBento.bento);
 	}
 	
-	private boolean fetchBentoObj(DbFeed dbFeed, JSONObject stateObj, Bento bento) {
+	private boolean fetchBentoObj(JSONObject stateObj, Bento bento) {
 		boolean ret = false;
 		try {
 			JSONObject bentoObj = stateObj.getJSONObject(BENTO);
@@ -466,10 +539,10 @@ public class BentoManager {
 	
 	private void setNewTodoListObj(JSONObject stateObj) {
 		mBento.bento.todoList = new ArrayList<TodoListItem>();
-		fetchTodoListObj(mDbFeed, stateObj, mBento.bento.todoList);
+		fetchTodoListObj(stateObj, mBento.bento.todoList);
 	}
 
-	private boolean fetchTodoListObj(DbFeed dbFeed, JSONObject stateObj, ArrayList<TodoListItem> todoList) {
+	private boolean fetchTodoListObj(JSONObject stateObj, ArrayList<TodoListItem> todoList) {
 		boolean ret = false;
 		try {
 			JSONArray todoListArray = stateObj.optJSONArray(TODO_LIST);

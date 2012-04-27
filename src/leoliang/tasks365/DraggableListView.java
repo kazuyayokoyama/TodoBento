@@ -22,6 +22,7 @@ import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.Gravity;
@@ -100,7 +101,7 @@ public class DraggableListView extends ListView {
     /* pointToPosition() doesn't consider invisible views, but we need to, so implement a slightly different version. */
     private int myPointToPosition(int x, int y) {
         if (y < 0) {
-        	//Log.e(LOG_TAG, "myPointToPosition: " + y);
+        	Log.d(LOG_TAG, "myPointToPosition: " + y);
             return getFirstVisiblePosition();
         }
         Rect frame = new Rect();

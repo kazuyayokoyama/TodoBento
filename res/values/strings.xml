@@ -51,7 +51,7 @@
     <string name="clear_dialog_yes">Yes</string>
     <string name="clear_dialog_cancel">No</string>
     <string name="create_dialog_title">New Bento</string>
-    <string name="create_dialog_text">Bento is a container for organizing todo list. Please create new Bento first for adding new todo.</string>
+    <string name="create_dialog_text">Create new Bento first for adding new todo.</string>
     <string name="create_dialog_hint">shopping list, reminder</string>
     <string name="create_dialog_ok">OK</string>
     <string name="create_dialog_cancel">Cancel</string>

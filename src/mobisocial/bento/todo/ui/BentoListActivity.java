@@ -18,14 +18,15 @@ package mobisocial.bento.todo.ui;
 
 import java.util.UUID;
 
+import mobisocial.bento.todo.R;
 import mobisocial.bento.todo.io.Bento;
 import mobisocial.bento.todo.io.BentoManager;
 import mobisocial.bento.todo.io.BentoManager.OnStateUpdatedListener;
 import mobisocial.bento.todo.util.UIUtils;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActionBar;
 import android.support.v4.app.FragmentActivity;
@@ -38,11 +39,10 @@ import android.view.View.OnFocusChangeListener;
 import android.view.WindowManager;
 import android.widget.EditText;
 
-import mobisocial.bento.todo.R;
-
 public class BentoListActivity extends FragmentActivity {
 	//private static final String TAG = "BentoListActivity";
-	private static final int REQUEST_TODO_LIST = 0;
+    private static final int REQUEST_CREATE_FEED = 1;
+    private static final String ACTION_CREATE_FEED = "musubi.intent.action.CREATE_FEED";
 
     private BentoManager mManager = BentoManager.getInstance();
     private BentoListFragment mBentoListFragment;
@@ -83,7 +83,12 @@ public class BentoListActivity extends FragmentActivity {
                 finish();
                 return true;
             case R.id.menu_add:
-            	goCreate();
+            	// If it's still working on Musubi, create Bento on current Feed
+            	if (mManager.isFromMusubi()) {
+            		goCreate();
+            	} else {
+            		goNewFeed();
+            	}
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -91,9 +96,16 @@ public class BentoListActivity extends FragmentActivity {
     }
 
 	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-	}
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CREATE_FEED) {
+            if (resultCode == RESULT_OK) {
+                Uri feedUri = data.getData();
+                mManager.setFeedUri(feedUri);
+                
+                goCreate();
+            }
+        }
+    };
 	
 	// BentoEventManager > OnStateUpdatedListener
 	private OnStateUpdatedListener mStateUpdatedListener = new OnStateUpdatedListener() {
@@ -103,13 +115,7 @@ public class BentoListActivity extends FragmentActivity {
 		}
 	};
     
-    public void goTodoList() {
-		// Intent
-		Intent intent = new Intent(this, TodoListActivity.class);
-		startActivityForResult(intent, REQUEST_TODO_LIST);
-    }
-    
-    public void goCreate() {
+    private void goCreate() {
 		// Show Add dialog
 		LayoutInflater factory = LayoutInflater.from(this);
 		final View inputView = factory.inflate(R.layout.dialog_create_bento, null);
@@ -168,5 +174,10 @@ public class BentoListActivity extends FragmentActivity {
 			}
 		});
 		dialog.show();
+    }
+    
+    private void goNewFeed() {
+        Intent create = new Intent(ACTION_CREATE_FEED);
+        startActivityForResult(create, REQUEST_CREATE_FEED);
     }
 }

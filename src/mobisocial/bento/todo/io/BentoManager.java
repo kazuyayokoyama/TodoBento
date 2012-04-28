@@ -90,7 +90,8 @@ public class BentoManager {
 	private String mLocalName = null;
     private Integer mLastInt = 0;
     private int mVersionCode = 0;
-
+    private boolean mbFromMusubi = false;
+    
 	private ArrayList<BentoListItem> mBentoList = new ArrayList<BentoListItem>();
 	private BentoListItem mBento = new BentoListItem();
     private ArrayList<OnStateUpdatedListener> mListenerList = new ArrayList<OnStateUpdatedListener>();
@@ -127,6 +128,7 @@ public class BentoManager {
 		if (mCurrentUri != null) {
 			mMusubi.objForUri(mCurrentUri).getSubfeed().unregisterStateObserver(mStateObserver);
 		}
+		mCurrentUri = null;
 		mBentoList = null;
 		mBento = null;
 
@@ -400,6 +402,18 @@ public class BentoManager {
 	// ----------------------------------------------------------
 	// Musubi
 	// ----------------------------------------------------------
+	public void setFromMusubi(boolean bFromMusubi) {
+		mbFromMusubi = bFromMusubi;
+	}
+
+	public boolean isFromMusubi() {
+		return mbFromMusubi;
+	}
+	
+	public void setFeedUri(Uri feedUri) {
+		mMusubi.setFeed(mMusubi.getFeed(feedUri));
+	}
+	
 	public void pushUpdate(String htmlMsg) {
 		pushUpdate(htmlMsg, null, null, false);
 	}

@@ -33,7 +33,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 
 public class HomeActivity extends FragmentActivity {
 	public static final String EXTRA_TODO = "mobisocial.bento.todo.extra.EXTRA_TODO";
@@ -61,7 +60,7 @@ public class HomeActivity extends FragmentActivity {
 			goMusubiOnMarket();
 			return;
 		}
-
+		
 		Intent intent = getIntent();
 		// Check if this activity launched from internal activity
 		if (intent.hasExtra(EXTRA_TODO)) {
@@ -76,6 +75,9 @@ public class HomeActivity extends FragmentActivity {
 			// go to market
 			goMarket();
 		} else {
+			// From Musubi
+			mManager.setFromMusubi(Musubi.isMusubiIntent(intent));
+			
 			// get version code
 			int versionCode = 0;
 			try {

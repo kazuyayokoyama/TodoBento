@@ -16,8 +16,12 @@
 
 package mobisocial.bento.todo.ui;
 
+import java.util.ArrayList;
+
+import mobisocial.bento.todo.R;
 import mobisocial.bento.todo.io.BentoManager;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,10 +29,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import mobisocial.bento.todo.R;
-
 public class BentoListItemAdapter extends ArrayAdapter<BentoListItem> {
-	//private static final String TAG = "BentoListItemAdapter";
+	private static final Boolean DEBUG = true;
+	private static final String TAG = "BentoListItemAdapter";
 
 	private LayoutInflater mInflater;
 	private BentoManager mManager = BentoManager.getInstance();
@@ -70,25 +73,62 @@ public class BentoListItemAdapter extends ArrayAdapter<BentoListItem> {
 		// Fetch item
 		final BentoListItem item = (BentoListItem) getItem(position);
 		
-		if (convertView == null) {
-			// Create view from Layout File
-			convertView = mInflater.inflate(R.layout.item_bento_list, null);
-			holder = new ViewHolder();
-			holder.name = (TextView) convertView.findViewById(R.id.name);
-			holder.numberOfTodos = (TextView) convertView.findViewById(R.id.number_of_todos);
-			convertView.setTag(holder);
+		if (isEnabled(position)) {
+			if (convertView == null || convertView.getId() != R.layout.item_bento_list) {
+				// Create view from Layout File
+				convertView = mInflater.inflate(R.layout.item_bento_list, null);
+				holder = new ViewHolder();
+				holder.name = (TextView) convertView.findViewById(R.id.name);
+				holder.numberOfTodos = (TextView) convertView.findViewById(R.id.number_of_todos);
+				convertView.setTag(holder);
+			} else {
+				holder = (ViewHolder) convertView.getTag();
+			}
+	
+			// Set Name
+			holder.name.setText(item.bento.name);
+			
+			// Set Number of Todos
+			holder.numberOfTodos.setText(mContext.getResources().getQuantityString(R.plurals.bento_list_number, item.bento.numberOfTodo, item.bento.numberOfTodo));
 		} else {
-			holder = (ViewHolder) convertView.getTag();
+			if (convertView == null || convertView.getId() != R.layout.item_bento_list_divider) {
+				// Create view from Layout File
+				convertView = mInflater.inflate(R.layout.item_bento_list_divider, null);
+				holder = new ViewHolder();
+				holder.name = (TextView) convertView.findViewById(R.id.feed_name);
+				convertView.setTag(holder);
+			} else {
+				holder = (ViewHolder) convertView.getTag();
+			}
+	
+			// Set Name
+			holder.name.setText(getFeedName(item.feedId));
 		}
-
-		// Set Name
-		holder.name.setText(item.bento.name);
 		
-		// Set Start Date and Time
-		StringBuilder msg = new StringBuilder(
-				mContext.getString(R.string.bento_list_number, item.bento.numberOfTodo));
-		holder.numberOfTodos.setText(msg.toString());
-
 		return convertView;
+	}
+	
+	@Override
+    public boolean isEnabled(int position) {
+        return getItem(position).enabled;
+    }
+	
+	private String getFeedName(long feedId) {
+		String feedName = "";
+		ArrayList<String> members = mManager.getMemberNames(feedId);
+
+		if (members.size() > 0) {
+	        StringBuilder text = new StringBuilder(100);
+			for (String memeber : members) {
+	            text.append(memeber).append(", ");
+			}
+	        text.setLength(text.length() - 2);
+	        
+	        feedName = text.toString();
+		}
+		
+		if (DEBUG) Log.d(TAG, "feedName: " + feedName);
+		
+		return feedName;
 	}
 }

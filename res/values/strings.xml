@@ -18,7 +18,7 @@
     
 	<!-- Label -->
     <string name="app_name">TodoBento</string>
-    <string name="label_bento_list">TodoBento / Bento List</string>
+    <string name="label_bento_list">Bento List</string>
     <string name="label_todo_list">Todo List</string>
     <string name="label_todo_detail">Detail</string>
 
@@ -62,11 +62,14 @@
     
     <!-- Bento List -->
     <string name="bento_list_empty">No Bentos</string>
-    <string name="bento_list_number"><xliff:g id="number">%1$s</xliff:g> todo</string>
     <string name="bento_list_loading">Loading</string>
+    <plurals name="bento_list_number">
+        <item quantity="one">1 todo</item>
+        <item quantity="other">%d todos</item>
+    </plurals>
     
     <!-- Todo List -->
-    <string name="todo_list_empty">No todo.\nPlease add the first todo right now!</string>
+    <string name="todo_list_empty">No todos.\nPlease add the first todo right now!</string>
     <string name="todo_list_loading">Loading</string>
     
     <!-- Todo Detail -->

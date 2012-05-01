@@ -143,35 +143,6 @@ public class HomeActivity extends FragmentActivity {
 		marketDialog.create().show();
 	}
     
-	private void goMusubi() {
-		AlertDialog.Builder musubiDialog = new AlertDialog.Builder(this)
-				.setTitle(R.string.musubi_dialog_title)
-				.setMessage(R.string.musubi_dialog_text)
-				.setIcon(android.R.drawable.ic_dialog_info)
-				.setCancelable(true)
-				.setPositiveButton(getResources().getString(R.string.musubi_dialog_yes), new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						try {
-							// Launching Musubi
-			                Intent intent = new Intent(Intent.ACTION_MAIN);
-			                intent.setClassName("mobisocial.musubi", "mobisocial.musubi.ui.FeedListActivity"); 
-			                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); 
-			                startActivity(intent);
-			                finish();
-						} catch (Exception e) {
-							goMusubiOnMarket();
-						}
-					}
-				})
-				.setNegativeButton(getResources().getString(R.string.musubi_dialog_no),
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int whichButton) {
-								finish();
-							}
-						});
-		musubiDialog.create().show();
-	}
-    
 	private void goMarket() {
 		// Go to Market
 		Uri uri = Uri.parse("market://details?id=mobisocial.bento.todo");

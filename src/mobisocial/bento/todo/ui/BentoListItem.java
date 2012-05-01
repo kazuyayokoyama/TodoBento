@@ -23,8 +23,11 @@ import android.net.Uri;
 public class BentoListItem {
 	public Bento bento;
 	public Uri objUri;
+	public long feedId;
+	public boolean enabled;
 	
 	public BentoListItem() {
 		bento = new Bento();
+		enabled = true;
 	}
 }

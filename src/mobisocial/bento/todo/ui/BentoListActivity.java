@@ -37,6 +37,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
 import android.view.WindowManager;
+import android.webkit.WebView;
 import android.widget.EditText;
 
 public class BentoListActivity extends FragmentActivity {
@@ -89,6 +90,9 @@ public class BentoListActivity extends FragmentActivity {
             	} else {
             		goNewFeed();
             	}
+                return true;
+            case R.id.menu_info:
+            	goInfo();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -179,5 +183,27 @@ public class BentoListActivity extends FragmentActivity {
     private void goNewFeed() {
         Intent create = new Intent(ACTION_CREATE_FEED);
         startActivityForResult(create, REQUEST_CREATE_FEED);
+    }
+    
+    private void goInfo() {
+		// Show Add dialog
+		LayoutInflater factory = LayoutInflater.from(this);
+		final View inputView = factory.inflate(R.layout.dialog_info, null);
+
+		// WebView
+		final WebView webView = (WebView) inputView.findViewById(R.id.webview);
+		webView.loadUrl("file:///android_asset/license.html");
+
+		AlertDialog.Builder libDialog = new AlertDialog.Builder(this)
+				.setTitle(R.string.info_dialog_title)
+				.setIcon(android.R.drawable.ic_dialog_info)
+				.setView(inputView)
+				.setCancelable(false)
+				.setPositiveButton(R.string.info_dialog_ok, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						// 
+					}
+				});
+		libDialog.create().show();
     }
 }

@@ -32,6 +32,7 @@
     <string name="menu_todo_more">More</string>
     <string name="menu_todo_clear">Clear Completed</string>
     <string name="menu_todo_bento_list">Bento List</string>
+    <string name="menu_info">Info</string>
     
     <!-- Dialog -->
     <string name="market_dialog_title">Thank you for using TodoBento!</string>
@@ -59,6 +60,8 @@
     <string name="bento_list_dialog_text"></string>
     <string name="bento_list_dialog_ok">OK</string>
     <string name="bento_list_dialog_cancel">Cancel</string>
+    <string name="info_dialog_title">Open Source Software</string>
+    <string name="info_dialog_ok">OK</string>
     
     <!-- Bento List -->
     <string name="bento_list_empty">No Bentos</string>

@@ -30,7 +30,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class BentoListItemAdapter extends ArrayAdapter<BentoListItem> {
-	private static final Boolean DEBUG = true;
+	private static final Boolean DEBUG = false;
 	private static final String TAG = "BentoListItemAdapter";
 
 	private LayoutInflater mInflater;

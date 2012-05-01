@@ -14,15 +14,19 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/menu_info"
-        android:icon="@drawable/ic_menu_info_details"
-        android:title="@string/menu_info"
-        android:orderInCategory="1"
-        android:showAsAction="always" />
-    <item android:id="@+id/menu_add"
-        android:icon="@drawable/ic_menu_add"
-        android:title="@string/menu_bento_add"
-        android:orderInCategory="2"
-        android:showAsAction="always" />
-</menu>
+<LinearLayout
+  	xmlns:android="http://schemas.android.com/apk/res/android"
+  	android:layout_width="300dip"
+  	android:layout_height="match_parent"
+  	android:orientation="vertical">
+ 
+    <WebView
+        android:id="@+id/webview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="2dip"
+		android:layout_marginRight="2dip"
+        android:scrollHorizontally="true"
+        android:gravity="fill_horizontal" />
+        
+</LinearLayout>

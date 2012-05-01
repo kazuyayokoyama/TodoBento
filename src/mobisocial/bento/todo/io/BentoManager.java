@@ -84,7 +84,7 @@ public class BentoManager {
 		public JSONObject json = null;
 		public int intKey = 0;
 	};
-	private static final Boolean DEBUG = true;
+	private static final Boolean DEBUG = false;
 	private static final String TAG = "TodoDataManager";
 	private static BentoManager sInstance = null;
 	private Musubi mMusubi = null;

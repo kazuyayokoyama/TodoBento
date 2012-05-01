@@ -60,7 +60,7 @@ public class TodoListFragment extends ListFragment {
         public void onBentoSelected();
     }
 
-	private static final Boolean DEBUG = true;
+	private static final Boolean DEBUG = false;
     private static final String TAG = "TodoListFragment";
 	private static final int REQUEST_IMAGE_CAPTURE = 0;
 	private static final int REQUEST_GALLERY = 1;

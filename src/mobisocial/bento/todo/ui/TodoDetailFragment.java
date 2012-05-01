@@ -127,9 +127,9 @@ public class TodoDetailFragment extends Fragment {
 
 				StringBuilder msg = new StringBuilder(getResources()
 						.getString(R.string.feed_msg_updated, mManager.getLocalName()));
-				String htmlMsg = UIUtils.getHtmlString(mManager.getBentoListItem().bento.name, msg.toString());
+				String plainMsg = UIUtils.getPlainString(mManager.getBentoListItem().bento.name, msg.toString());
 				
-				mManager.updateTodo(mTodoItem, htmlMsg);
+				mManager.updateTodo(mTodoItem, plainMsg);
 			}
 
 			// go back

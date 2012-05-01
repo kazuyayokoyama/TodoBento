@@ -118,9 +118,9 @@ public class TodoListItemAdapter extends ArrayAdapter<TodoListItem> {
 					}
 				}
 				StringBuilder msg = new StringBuilder(baseMsg);
-				String htmlMsg = UIUtils.getHtmlString(mManager.getBentoListItem().bento.name, msg.toString());
+				String plainMsg = UIUtils.getPlainString(mManager.getBentoListItem().bento.name, msg.toString());
 				
-				mManager.updateTodo(item, htmlMsg);
+				mManager.updateTodo(item, plainMsg);
 				notifyDataSetChanged();
 			}
 		});

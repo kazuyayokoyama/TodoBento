@@ -364,28 +364,28 @@ public class BentoManager {
 	// ----------------------------------------------------------
 	// Update
 	// ----------------------------------------------------------
-	synchronized public void createBento(Bento bento, String htmlMsg) {
+	synchronized public void createBento(Bento bento, String msg) {
 		mBento = new BentoListItem();
 		mBento.bento = bento;
-		pushUpdate(htmlMsg, true);
+		pushUpdate(msg, true);
 	}
 	
-	synchronized public void addTodo(TodoListItem item, Bitmap image, String htmlMsg) {
+	synchronized public void addTodo(TodoListItem item, Bitmap image, String msg) {
 		mBento.bento.todoList.add(0, item);
 		
 		if (image == null) {
-			pushUpdate(htmlMsg);
+			pushUpdate(msg);
 		} else {
 			String data = Base64.encodeToString(BitmapHelper.bitmapToBytes(image), Base64.DEFAULT);
-			pushUpdate(htmlMsg, item.uuid, data, false);
+			pushUpdate(msg, item.uuid, data, false);
 		}
 	}
 
-	synchronized public void removeTodo(TodoListItem item, String htmlMsg) {
+	synchronized public void removeTodo(TodoListItem item, String msg) {
 		// not supported yet
 	}
 
-	synchronized public void updateTodo(TodoListItem updateItem, String htmlMsg) {
+	synchronized public void updateTodo(TodoListItem updateItem, String msg) {
 		for (int i=0; i<mBento.bento.todoList.size(); i++) {
 			TodoListItem item = mBento.bento.todoList.get(i);
 			if (item.uuid.equals(updateItem.uuid)) {
@@ -395,7 +395,7 @@ public class BentoManager {
 			}
 		}
 
-		pushUpdate(htmlMsg);
+		pushUpdate(msg);
 	}
 
 	synchronized public void sortTodoList(int positionFrom, int positionTo) {
@@ -428,11 +428,11 @@ public class BentoManager {
 		}
 	}
 
-	synchronized public void sortTodoCompleted(String htmlMsg) {
-		pushUpdate(htmlMsg);
+	synchronized public void sortTodoCompleted(String msg) {
+		pushUpdate(msg);
 	}
 
-	synchronized public void clearTodoDone(String htmlMsg) {
+	synchronized public void clearTodoDone(String msg) {
 		int beforeCount = mBento.bento.todoList.size();
 		if (beforeCount == 0) {
 			return;
@@ -448,7 +448,7 @@ public class BentoManager {
 		
 		// if updated
 		if (beforeCount > mBento.bento.todoList.size()) {
-			pushUpdate(htmlMsg);
+			pushUpdate(msg);
 		}
 	}
 
@@ -478,15 +478,15 @@ public class BentoManager {
 		mMusubi.setFeed(mMusubi.getFeed(feedUri));
 	}
 	
-	public void pushUpdate(String htmlMsg) {
-		pushUpdate(htmlMsg, null, null, false);
+	public void pushUpdate(String msg) {
+		pushUpdate(msg, null, null, false);
 	}
 	
-	public void pushUpdate(String htmlMsg, boolean bFirst) {
-		pushUpdate(htmlMsg, null, null, bFirst);
+	public void pushUpdate(String msg, boolean bFirst) {
+		pushUpdate(msg, null, null, bFirst);
 	}
 
-	public void pushUpdate(String htmlMsg, String todoUuid, String data, boolean bFirst) {
+	public void pushUpdate(String msg, String todoUuid, String data, boolean bFirst) {
 		try {
 			JSONObject rootObj = new JSONObject();
 			rootObj.put(Obj.FIELD_RENDER_TYPE, Obj.RENDER_LATEST);
@@ -502,7 +502,7 @@ public class BentoManager {
 				out.put(B64JPGTHUMB, data);
 			}
 			
-			FeedRenderable renderable = FeedRenderable.fromHtml(htmlMsg);
+			FeedRenderable renderable = FeedRenderable.fromText(msg);
 			renderable.addToJson(out);
 			if (bFirst) {
 				Obj obj = new MemObj(TYPE_TODOBENTO, out, null);

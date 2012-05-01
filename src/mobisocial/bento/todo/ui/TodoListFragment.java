@@ -90,9 +90,9 @@ public class TodoListFragment extends ListFragment {
 				// sort
 				StringBuilder msg = new StringBuilder(
 						getString(R.string.feed_msg_sorted, mManager.getLocalName()));
-				String htmlMsg = UIUtils.getHtmlString(mManager.getBentoListItem().bento.name, msg.toString());
+				String plainMsg = UIUtils.getPlainString(mManager.getBentoListItem().bento.name, msg.toString());
                 mManager.sortTodoList(from, to);
-                mManager.sortTodoCompleted(htmlMsg);
+                mManager.sortTodoCompleted(plainMsg);
                 
                 refreshView();
             }
@@ -202,9 +202,9 @@ public class TodoListFragment extends ListFragment {
 							// add
 							StringBuilder msg = new StringBuilder(
 									getString(R.string.feed_msg_added, mManager.getLocalName(), item.title));
-							String htmlMsg = UIUtils.getHtmlString(mManager.getBentoListItem().bento.name, msg.toString());
+							String plainMsg = UIUtils.getPlainString(mManager.getBentoListItem().bento.name, msg.toString());
 							
-							mManager.addTodo(item, null, htmlMsg);
+							mManager.addTodo(item, null, plainMsg);
 							
 							// refresh list view
 							refreshView();
@@ -258,9 +258,9 @@ public class TodoListFragment extends ListFragment {
 						// clear
 						StringBuilder msg = new StringBuilder(
 								getString(R.string.feed_msg_cleared, mManager.getLocalName()));
-						String htmlMsg = UIUtils.getHtmlString(mManager.getBentoListItem().bento.name, msg.toString());
+						String plainMsg = UIUtils.getPlainString(mManager.getBentoListItem().bento.name, msg.toString());
 						
-						mManager.clearTodoDone(htmlMsg);
+						mManager.clearTodoDone(plainMsg);
 						
 						ImageCache.clearCache();
 						
@@ -420,9 +420,9 @@ public class TodoListFragment extends ListFragment {
 
 					StringBuilder msg = new StringBuilder(
 							getString(R.string.feed_msg_added_photo, mManager.getLocalName()));
-					String htmlMsg = UIUtils.getHtmlString(mManager.getBentoListItem().bento.name, msg.toString());
+					String plainMsg = UIUtils.getPlainString(mManager.getBentoListItem().bento.name, msg.toString());
 					
-					mManager.addTodo(item, bitmap, htmlMsg);
+					mManager.addTodo(item, bitmap, plainMsg);
 					
 					refreshView();
 

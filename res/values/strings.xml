@@ -78,12 +78,12 @@
     
     <!-- Update Feed Message -->
     <string name="feed_msg_created"><xliff:g id="name">%1$s</xliff:g> just created new Bento. Add new todo!</string>
-    <string name="feed_msg_added"><xliff:g id="name">%1$s</xliff:g> just added\n \'<xliff:g id="todo">%2$s</xliff:g>\'.</string>
-    <string name="feed_msg_added_photo"><xliff:g id="name">%1$s</xliff:g> just added\n a photo todo!</string>
+    <string name="feed_msg_added"><xliff:g id="name">%1$s</xliff:g> just added \"<xliff:g id="todo">%2$s</xliff:g>\".</string>
+    <string name="feed_msg_added_photo"><xliff:g id="name">%1$s</xliff:g> just added a photo todo!</string>
     <string name="feed_msg_updated"><xliff:g id="name">%1$s</xliff:g> updated some todo.</string>
-    <string name="feed_msg_done">Yay! <xliff:g id="name">%1$s</xliff:g> got \'<xliff:g id="todo">%2$s</xliff:g>\' done!</string>
+    <string name="feed_msg_done">Yay! <xliff:g id="name">%1$s</xliff:g> got \"<xliff:g id="todo">%2$s</xliff:g>\" done!</string>
     <string name="feed_msg_done_notitle">Yay! <xliff:g id="name">%1$s</xliff:g> got a todo done!</string>
-    <string name="feed_msg_undone">Hmm. <xliff:g id="name">%1$s</xliff:g> returned \'<xliff:g id="todo">%2$s</xliff:g>\' to undone.</string>
+    <string name="feed_msg_undone">Hmm. <xliff:g id="name">%1$s</xliff:g> returned \"<xliff:g id="todo">%2$s</xliff:g>\" to undone.</string>
     <string name="feed_msg_undone_notitle">Hmm. <xliff:g id="name">%1$s</xliff:g> returned a todo to undone.</string>
     <string name="feed_msg_cleared"><xliff:g id="name">%1$s</xliff:g> cleared completed todo.</string>
     <string name="feed_msg_sorted"><xliff:g id="name">%1$s</xliff:g> sorted some todo.</string>

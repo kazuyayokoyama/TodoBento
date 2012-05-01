@@ -146,9 +146,9 @@ public class BentoListActivity extends FragmentActivity {
 							// create
 							StringBuilder msg = new StringBuilder(
 									getString(R.string.feed_msg_created, mManager.getLocalName()));
-							String htmlMsg = UIUtils.getHtmlString(bentoName, msg.toString());
+							String plainMsg = UIUtils.getPlainString(bentoName, msg.toString());
 							
-							mManager.createBento(bento, htmlMsg);
+							mManager.createBento(bento, plainMsg);
 
 							// return to home
 							Intent intent = new Intent();

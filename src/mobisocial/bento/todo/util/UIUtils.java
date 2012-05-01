@@ -51,4 +51,8 @@ public class UIUtils {
         html.append("</body></html>");
         return html.toString();
     }
+    
+    public static String getPlainString(String bentoName, String msg) {
+        return "✔" + bentoName + "\n" + msg;
+    }
 }

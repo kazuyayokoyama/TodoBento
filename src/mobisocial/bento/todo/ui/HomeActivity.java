@@ -88,7 +88,7 @@ public class HomeActivity extends FragmentActivity {
 			    e.printStackTrace();
 			}
 			
-			new TodoListAsyncTask(this, (Uri) intent.getParcelableExtra(Musubi.EXTRA_FEED_URI), versionCode).execute();
+			new TodoListAsyncTask(this, versionCode).execute();
 		}
 	}
 
@@ -154,13 +154,11 @@ public class HomeActivity extends FragmentActivity {
 	private class TodoListAsyncTask extends AsyncTask<Void, Void, Boolean> {
 		private BentoManager mManager = BentoManager.getInstance();
 		private Context mContext;
-		private Uri mUri;
 		private int mVersionCode;
 		private ProgressDialog mProgressDialog = null;
 		
-		public TodoListAsyncTask(Context context, Uri uri, int versionCode) {
+		public TodoListAsyncTask(Context context, int versionCode) {
 			mContext = context;
-			mUri = uri;
 			mVersionCode = versionCode;
 		}
 
@@ -176,7 +174,7 @@ public class HomeActivity extends FragmentActivity {
 
 		@Override
 		protected Boolean doInBackground(Void... params) {
-			mManager.init(mMusubi, mUri, mVersionCode);
+			mManager.init(mMusubi, mVersionCode);
 			return true;
 		}
 

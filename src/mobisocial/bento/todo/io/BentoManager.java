@@ -89,7 +89,6 @@ public class BentoManager {
 	private static BentoManager sInstance = null;
 	private Musubi mMusubi = null;
 	private Uri mCurrentUri = null;
-	private Uri mBaseUri = null;
 	private String mLocalContactId = null;
 	private String mLocalName = null;
     private Integer mLastInt = 0;
@@ -117,12 +116,9 @@ public class BentoManager {
 		return sInstance;
 	}
 
-	public void init(Musubi musubi, Uri baseUri, int versionCode) {
+	public void init(Musubi musubi, int versionCode) {
 		mMusubi = musubi;
-		mBaseUri = baseUri;
 		mVersionCode = versionCode;
-		mLocalContactId = mMusubi.userForLocalDevice(mBaseUri).getId();
-		mLocalName = mMusubi.userForLocalDevice(mBaseUri).getName();
 		if (mMusubi.getObj() != null && mMusubi.getObj().getSubfeed() != null) {
 			setBentoObjUri(mMusubi.getObj().getUri());
 		}
@@ -546,6 +542,10 @@ public class BentoManager {
 				mLastInt = latestObj.intKey;
 			}
 		}
+
+		Uri feedUri = mMusubi.objForUri(mCurrentUri).getSubfeed().getUri();
+		mLocalContactId = mMusubi.userForLocalDevice(feedUri).getId();
+		mLocalName = mMusubi.userForLocalDevice(feedUri).getName();
 		
 		mMusubi.objForUri(mCurrentUri).getSubfeed().registerStateObserver(mStateObserver);
 	}

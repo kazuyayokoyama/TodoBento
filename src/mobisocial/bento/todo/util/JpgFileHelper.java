@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 
 import android.graphics.Bitmap;
@@ -66,5 +67,26 @@ public class JpgFileHelper {
 			fileDirectory.mkdir();
 		}
 		return new File(tmpImageFile);
+	}
+	
+	public static File saveTmpFile(InputStream is) throws Exception {
+		File file = getTmpFile();
+		OutputStream os = new FileOutputStream(file);
+		
+		byte[] buf = new byte[1024];
+		int len = 0;
+		
+		while((len = is.read(buf)) > 0){
+			os.write(buf, 0, len);
+		}
+		
+		os.flush();
+		os.close();
+		
+		return file;
+	}
+	
+	public static boolean deleteTmpFile() {
+		return deleteJpegFile("tmp");
 	}
 }

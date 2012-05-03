@@ -18,6 +18,9 @@ package mobisocial.bento.todo.ui;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.UUID;
 
 import leoliang.tasks365.DraggableListView;
@@ -31,9 +34,11 @@ import mobisocial.bento.todo.util.UIUtils;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -41,6 +46,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.provider.MediaStore.MediaColumns;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.SupportActivity;
 import android.support.v4.view.MenuItem;
@@ -239,11 +245,9 @@ public class TodoListFragment extends ListFragment {
 	}
 
 	private void goGallery() {
-		File tmpFile = JpgFileHelper.getTmpFile();
 		Intent intent = new Intent();
 		intent.setType("image/*");
 		intent.setAction(Intent.ACTION_PICK);
-		intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(tmpFile));
 		startActivityForResult(intent, REQUEST_GALLERY);
 	}
 
@@ -372,17 +376,59 @@ public class TodoListFragment extends ListFragment {
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (DEBUG) Log.d(TAG, "requestCode: " + requestCode + ", resultCode: " + resultCode);
 		if (resultCode == Activity.RESULT_OK) {
 			try {
-				// uncomment below if you want to get small image
-				// Bitmap b = (Bitmap)data.getExtras().get("data");
+				File imageFile = null;
+				
+				if (requestCode == REQUEST_IMAGE_CAPTURE) {
+					
+					imageFile = JpgFileHelper.getTmpFile();
+					
+				} else if (requestCode == REQUEST_GALLERY) {
+					Uri uri = data.getData();
+					if (uri == null || uri.toString().length() == 0) {
+						return;
+					}
 
-				File tmpFile = JpgFileHelper.getTmpFile();
-				if (tmpFile.exists() && tmpFile.length() > 0) {
+					if (DEBUG) Log.d(TAG, "data URI: " + uri.toString());
+					
+					ContentResolver cr = getActivity().getContentResolver();
+					String[] columns = { MediaColumns.DATA, MediaColumns.DISPLAY_NAME };
+					Cursor c = cr.query(uri, columns, null, null, null);
+					
+					if (c != null && c.moveToFirst()) {
+						if (c.getString(0) != null) {
+							//regular processing for gallery files
+							imageFile = new File(c.getString(0));
+						} else {
+							final InputStream is = getActivity().getContentResolver().openInputStream(uri);
+							imageFile = JpgFileHelper.saveTmpFile(is);
+							is.close();
+						}
+					} else {
+						// http or https
+						HttpURLConnection http = null;
+						URL url = new URL(uri.toString());
+						http = (HttpURLConnection)url.openConnection();
+						http.setRequestMethod("GET");
+						http.connect();
+						
+						final InputStream is = http.getInputStream();
+						imageFile = JpgFileHelper.saveTmpFile(is);
+						is.close();
+						if (http != null) http.disconnect();
+					}
+				}
+				
+				if (imageFile.exists() && imageFile.length() > 0) {
+					if (DEBUG) Log.d(TAG, "imageFile exists=" + imageFile.exists()
+							+ " length=" + imageFile.length() + " path=" + imageFile.getPath());
+					
 					float degrees = 0;
 					try {
 						ExifInterface exif = new ExifInterface(
-								tmpFile.getPath());
+								imageFile.getPath());
 						switch (exif.getAttributeInt(
 								ExifInterface.TAG_ORIENTATION,
 								ExifInterface.ORIENTATION_NORMAL)) {
@@ -403,7 +449,7 @@ public class TodoListFragment extends ListFragment {
 						e.printStackTrace();
 					}
 
-					Bitmap bitmap = BitmapHelper.getResizedBitmap(tmpFile,
+					Bitmap bitmap = BitmapHelper.getResizedBitmap(imageFile,
 							BitmapHelper.MAX_IMAGE_WIDTH,
 							BitmapHelper.MAX_IMAGE_HEIGHT, degrees);
 
@@ -426,7 +472,7 @@ public class TodoListFragment extends ListFragment {
 					
 					refreshView();
 
-					tmpFile.delete();
+					JpgFileHelper.deleteTmpFile();
 				}
 
 			} catch (Exception e) {

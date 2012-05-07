@@ -19,6 +19,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="musubi.intent.category.MENU" />
                 <category android:name="musubi.intent.category.DEFAULT" />
             </intent-filter>

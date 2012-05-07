@@ -132,7 +132,11 @@ public class TodoListFragment extends ListFragment {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == R.id.menu_add) {
+		
+		if (item.getItemId() == android.R.id.home) {
+			goBentoList();
+			return true;
+		} else if (item.getItemId() == R.id.menu_add) {
 			goAdd();
 			return true;
 		} else if (item.getItemId() == R.id.menu_clear) {

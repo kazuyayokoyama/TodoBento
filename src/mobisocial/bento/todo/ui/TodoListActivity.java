@@ -47,6 +47,7 @@ public class TodoListActivity extends FragmentActivity implements OnBentoSelecte
 
 		final ActionBar actionBar = getSupportActionBar();
 		// set defaults for logo & home up
+		actionBar.setDisplayHomeAsUpEnabled(true); // bad know-how for enabling home clickable on ICS.
 		actionBar.setDisplayHomeAsUpEnabled(mLaunchedFromBentoList);
 		actionBar.setDisplayUseLogoEnabled(false);
 		actionBar.setTitle(mManager.getBentoListItem().bento.name.toString());
@@ -75,8 +76,10 @@ public class TodoListActivity extends FragmentActivity implements OnBentoSelecte
         case android.R.id.home:
         	if (mLaunchedFromBentoList) {
         		finish();
+        		return true;
+        	} else {
+        		return mTodoListFragment.onOptionsItemSelected(item);
         	}
-            return true;
         default:
             return mTodoListFragment.onOptionsItemSelected(item);
         }

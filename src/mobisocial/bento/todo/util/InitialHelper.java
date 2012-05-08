@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package mobisocial.bento.todo.ui;
+package mobisocial.bento.todo.util;
 
 import mobisocial.bento.todo.R;
 import mobisocial.bento.todo.io.BentoManager;
-import mobisocial.bento.todo.util.ImageCache;
 import mobisocial.socialkit.musubi.Musubi;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -31,133 +30,104 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 
-public class HomeActivity extends FragmentActivity {
-	public static final String EXTRA_TODO = "mobisocial.bento.todo.extra.EXTRA_TODO";
-
-	//private static final String TAG = "HomeActivity";
-	private static final int REQUEST_TODO_LIST = 0;
-	private static final int REQUEST_BENTO_LIST = 1;
-
-	private BentoManager mManager = BentoManager.getInstance();
-	private Musubi mMusubi = null;
-
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
+public class InitialHelper {
+    public interface OnInitCompleteListener {
+        public void onInitCompleted();
+    }
+    
+	private Activity mActivity = null;
+	private OnInitCompleteListener mListener;
+	
+	public InitialHelper(final Activity activity, OnInitCompleteListener listener) {
+		mActivity = activity;
+		mListener = listener;
+	}
+	
+	public Musubi initMusubiInstance() {
 		// Check if Musubi is installed
 		boolean bInstalled = false;
 		try {
-			bInstalled = Musubi.isMusubiInstalled(getApplication());
+			bInstalled = Musubi.isMusubiInstalled(mActivity);
 		} catch (Exception e) {
 			// be quiet
 			bInstalled = false;
 		}
 		if (!bInstalled) {
 			goMusubiOnMarket();
-			return;
+			return null;
 		}
 		
-		Intent intent = getIntent();
-		// Check if this activity launched from internal activity
-		if (intent.hasExtra(EXTRA_TODO)) {
-			// nothing to do for Musubi
-			return;
-		}
+		// Intent
+		Intent intent = mActivity.getIntent();
 		// create Musubi Instance
-		mMusubi = Musubi.forIntent(this, intent);
-		
+		Musubi musubi = Musubi.forIntent(mActivity, intent);
 		// Check if this activity launched from apps feed
-		if (mMusubi == null) {
+		if (musubi == null) {
 			// go to market
 			goMarket();
-		} else {
-			// From Musubi
-			mManager.setFromMusubi(Musubi.isMusubiIntent(intent));
-			
-			// get version code
-			int versionCode = 0;
-			try {
-				PackageInfo packageInfo = getPackageManager().getPackageInfo(
-						"mobisocial.bento.todo", PackageManager.GET_META_DATA);
-				versionCode = packageInfo.versionCode;
-			} catch (NameNotFoundException e) {
-			    e.printStackTrace();
-			}
-			
-			new TodoListAsyncTask(this, versionCode).execute();
+			mActivity.finish();
+			return null;
 		}
-	}
-
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == REQUEST_TODO_LIST) {
-			mManager.fin();
-			ImageCache.clearCache();
-			finish();
-		} else if (requestCode == REQUEST_BENTO_LIST) {
-			if (resultCode == Activity.RESULT_OK) {
-				goTodoList();
-			} else {
-				mManager.fin();
-				ImageCache.clearCache();
-				finish();
-			}
+		
+		// From Musubi
+		BentoManager manager = BentoManager.getInstance();
+		manager.init(musubi);
+		manager.setFromMusubi(Musubi.isMusubiIntent(intent));
+		
+		// get version code
+		int versionCode = 0;
+		try {
+			PackageInfo packageInfo = mActivity.getPackageManager().getPackageInfo(
+					"mobisocial.bento.todo", PackageManager.GET_META_DATA);
+			versionCode = packageInfo.versionCode;
+		} catch (NameNotFoundException e) {
+		    e.printStackTrace();
 		}
+		
+		new TodoListAsyncTask(musubi, mActivity, versionCode).execute();
+		return musubi;
 	}
-    
-    private void goBentoList() {
-		// Intent
-		Intent intent = new Intent(this, BentoListActivity.class);
-		startActivityForResult(intent, REQUEST_BENTO_LIST);
-    }
-    
-    private void goTodoList() {
-		// Intent
-		Intent intent = new Intent(this, TodoListActivity.class);
-		startActivityForResult(intent, REQUEST_TODO_LIST);
-    }
-    
-	private void goMusubiOnMarket() {
-		AlertDialog.Builder marketDialog = new AlertDialog.Builder(this)
+	
+	public void goMusubiOnMarket() {
+		AlertDialog.Builder marketDialog = new AlertDialog.Builder(mActivity)
 				.setTitle(R.string.market_dialog_title)
 				.setMessage(R.string.market_dialog_text)
 				.setIcon(android.R.drawable.ic_dialog_info)
 				.setCancelable(true)
-				.setPositiveButton(getResources().getString(R.string.market_dialog_yes), new DialogInterface.OnClickListener() {
+				.setPositiveButton(mActivity.getResources().getString(R.string.market_dialog_yes), new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
 						// Go to Android Market
-						startActivity(Musubi.getMarketIntent());
-						finish();
+						mActivity.startActivity(Musubi.getMarketIntent());
+						mActivity.finish();
 					}
 				})
-				.setNegativeButton(getResources().getString(R.string.market_dialog_no),
+				.setNegativeButton(mActivity.getResources().getString(R.string.market_dialog_no),
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int whichButton) {
-								finish();
+								mActivity.finish();
 							}
 						});
 		marketDialog.create().show();
 	}
-    
-	private void goMarket() {
+
+	public void goMarket() {
 		// Go to Market
 		Uri uri = Uri.parse("market://details?id=mobisocial.bento.todo");
 		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-		startActivity(intent);
-        finish();
+		mActivity.startActivity(intent);
+		mActivity.finish();
 	}
 
 	private class TodoListAsyncTask extends AsyncTask<Void, Void, Boolean> {
 		private BentoManager mManager = BentoManager.getInstance();
+		private Musubi mMusubi;
 		private Context mContext;
 		private int mVersionCode;
 		private ProgressDialog mProgressDialog = null;
 		
-		public TodoListAsyncTask(Context context, int versionCode) {
+		public TodoListAsyncTask(Musubi musubi, Context context, int versionCode) {
+			mMusubi = musubi;
 			mContext = context;
 			mVersionCode = versionCode;
 		}
@@ -174,7 +144,7 @@ public class HomeActivity extends FragmentActivity {
 
 		@Override
 		protected Boolean doInBackground(Void... params) {
-			mManager.init(mMusubi, mVersionCode);
+			mManager.setMusubi(mMusubi, mVersionCode);
 			return true;
 		}
 
@@ -186,12 +156,8 @@ public class HomeActivity extends FragmentActivity {
 					mProgressDialog = null;
 				}
 				
-				// Has Bento
-				if (mManager.hasBento()) {
-					goTodoList();
-				} else {
-					goBentoList();
-				}
+				// callback
+				mListener.onInitCompleted();
 				
 			} catch (Exception e) {
 				e.printStackTrace();

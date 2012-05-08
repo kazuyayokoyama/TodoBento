@@ -60,13 +60,15 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 public class TodoListFragment extends ListFragment {
     public interface OnBentoSelectedListener {
         public void onBentoSelected();
     }
 
-	private static final Boolean DEBUG = false;
+	private static final Boolean DEBUG = UIUtils.isDebugMode();
     private static final String TAG = "TodoListFragment";
 	private static final int REQUEST_IMAGE_CAPTURE = 0;
 	private static final int REQUEST_GALLERY = 1;
@@ -74,6 +76,8 @@ public class TodoListFragment extends ListFragment {
 	private BentoManager mManager = BentoManager.getInstance();
 	private TodoListItemAdapter mListAdapter = null;
 	private DraggableListView mListView = null;
+	private TextView mEmptyText;
+	private ProgressBar mEmptyProgressBar;
     private OnBentoSelectedListener mListener;
 
 	@Override
@@ -103,6 +107,10 @@ public class TodoListFragment extends ListFragment {
                 refreshView();
             }
         });
+
+		mEmptyText = (TextView) root.findViewById(R.id.empty_message);
+        mEmptyProgressBar = (ProgressBar) root.findViewById(R.id.progress);
+        mEmptyProgressBar.setVisibility(View.GONE);
 		
         return root;
     }
@@ -162,7 +170,6 @@ public class TodoListFragment extends ListFragment {
 		// Intent
 		Intent intent = new Intent(getActivity(), TodoDetailActivity.class);
 		intent.putExtra(TodoDetailFragment.EXTRA_TODO_UUID, mManager.getTodoListItem(position).uuid);
-		intent.putExtra(HomeActivity.EXTRA_TODO, HomeActivity.EXTRA_TODO);
 
         getActivity().startActivity(intent);
 	}
@@ -176,6 +183,23 @@ public class TodoListFragment extends ListFragment {
 			}
 		});
     }
+	
+	public void setProgressBarVisible(boolean bVisible) {
+		if (bVisible) {
+	        mEmptyProgressBar.setVisibility(View.VISIBLE);
+	        mEmptyText.setVisibility(View.GONE);
+		} else {
+	        mEmptyProgressBar.setVisibility(View.GONE);
+	        new Handler().postDelayed( mDelayShowEmptyText, 200);// execute after 200msec
+		}
+	}
+	
+	private final Runnable mDelayShowEmptyText= new Runnable() {
+	    @Override
+	    public void run() {
+	        mEmptyText.setVisibility(View.VISIBLE);
+	    }
+	};
 
 	private void goAdd() {
 		// Show Add dialog

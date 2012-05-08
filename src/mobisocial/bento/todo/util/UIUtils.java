@@ -21,6 +21,11 @@ import android.content.res.Configuration;
 import android.os.Build;
 
 public class UIUtils {
+	private static final Boolean DEBUG = true;
+	
+	public static boolean isDebugMode() {
+		return DEBUG;
+	}
 
     public static boolean isIceCreamSandwich() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH;

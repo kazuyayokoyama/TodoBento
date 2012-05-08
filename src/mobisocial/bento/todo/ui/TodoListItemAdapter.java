@@ -37,7 +37,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class TodoListItemAdapter extends ArrayAdapter<TodoListItem> {
-	private static final Boolean DEBUG = false;
+	private static final Boolean DEBUG = UIUtils.isDebugMode();
 	private static final String TAG = "TodoListItemAdapter";
 	private static final int IMG_WIDTH = 160;
 	private static final int IMG_HEIGHT = 160;

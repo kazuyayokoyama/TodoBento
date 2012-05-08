@@ -22,7 +22,10 @@ import mobisocial.bento.todo.R;
 import mobisocial.bento.todo.io.Bento;
 import mobisocial.bento.todo.io.BentoManager;
 import mobisocial.bento.todo.io.BentoManager.OnStateUpdatedListener;
+import mobisocial.bento.todo.util.InitialHelper;
 import mobisocial.bento.todo.util.UIUtils;
+import mobisocial.bento.todo.util.InitialHelper.OnInitCompleteListener;
+import mobisocial.socialkit.musubi.Musubi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -51,6 +54,14 @@ public class BentoListActivity extends FragmentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+		// create Musubi Instance
+        InitialHelper initHelper = new InitialHelper(this, mInitCompleteListener);
+		Musubi musubi = initHelper.initMusubiInstance();
+		if (musubi == null) {
+			return;
+		}
+
         setContentView(R.layout.activity_bento_list);
 
 		final ActionBar actionBar = getSupportActionBar();
@@ -110,6 +121,14 @@ public class BentoListActivity extends FragmentActivity {
             }
         }
     };
+
+	// InitialHelper > OnInitCompleteListener
+	private OnInitCompleteListener mInitCompleteListener = new OnInitCompleteListener() {
+		@Override
+		public void onInitCompleted() {
+			mBentoListFragment.refreshView();
+		}
+	};
 	
 	// BentoEventManager > OnStateUpdatedListener
 	private OnStateUpdatedListener mStateUpdatedListener = new OnStateUpdatedListener() {

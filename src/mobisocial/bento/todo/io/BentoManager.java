@@ -24,6 +24,7 @@ import java.util.Map;
 import mobisocial.bento.todo.ui.BentoListItem;
 import mobisocial.bento.todo.ui.TodoListItem;
 import mobisocial.bento.todo.util.BitmapHelper;
+import mobisocial.bento.todo.util.UIUtils;
 import mobisocial.socialkit.Obj;
 import mobisocial.socialkit.musubi.DbFeed;
 import mobisocial.socialkit.musubi.DbIdentity;
@@ -84,7 +85,7 @@ public class BentoManager {
 		public JSONObject json = null;
 		public int intKey = 0;
 	};
-	private static final Boolean DEBUG = false;
+	private static final Boolean DEBUG = UIUtils.isDebugMode();
 	private static final String TAG = "TodoDataManager";
 	private static BentoManager sInstance = null;
 	private Musubi mMusubi = null;
@@ -115,10 +116,27 @@ public class BentoManager {
 
 		return sInstance;
 	}
+	
+	public void init(Musubi musubi) {
+		if (DEBUG) Log.d(TAG, "init()");
+		
+		// remove previous data
+		if (mCurrentUri != null) {
+			mMusubi.objForUri(mCurrentUri).getSubfeed().unregisterStateObserver(mStateObserver);
+		}
+		mCurrentUri = null;
+		mBentoList = new ArrayList<BentoListItem>();
+		mBento = null;
+		mMemberNameCache = null;
+	}
 
-	public void init(Musubi musubi, int versionCode) {
+	public void setMusubi(Musubi musubi, int versionCode) {
+		if (DEBUG) Log.d(TAG, "setMusubi()");
+		
 		mMusubi = musubi;
 		mVersionCode = versionCode;
+		
+		// start new one
 		if (mMusubi.getObj() != null && mMusubi.getObj().getSubfeed() != null) {
 			setBentoObjUri(mMusubi.getObj().getUri());
 		}
@@ -167,7 +185,11 @@ public class BentoManager {
 	}
 
 	synchronized public int getTodoListCount() {
-		return mBento.bento.todoList.size();
+		if (mBento != null) {
+			return mBento.bento.todoList.size();
+		} else {
+			return 0;
+		}
 	}
 	
 	synchronized public Bitmap getTodoBitmap(String todoUuid,
@@ -553,39 +575,47 @@ public class BentoManager {
 	private final FeedObserver mStateObserver = new FeedObserver() {
 		@Override
 		public void onUpdate(DbObj obj) {
-			
 			if (DEBUG) Log.d(TAG, "onUpdate:" + obj.toString());
+			
+			// ignore
+			if (obj == null || obj.getJson() == null || !obj.getJson().has(STATE)) {
+				if (DEBUG) Log.d(TAG, "onUpdate: ignore-1");
+				return;
+			}
 
+			// notify refresh (always)
+			Handler handler = new Handler();
+			handler.post(new Runnable(){
+				public void run(){
+					for (OnStateUpdatedListener listener : mListenerList) {
+						listener.onStateUpdated();
+					}
+				}
+			});
+			
+			if (mBento == null || mBento.bento == null) {
+				if (DEBUG) Log.d(TAG, "onUpdate: ignore-2");
+				return;
+			}
+			
+			JSONObject stateObj = null;
+			stateObj = obj.getJson().optJSONObject(STATE);
+			try {
+				if (!isValidBento(stateObj.getJSONObject(BENTO).optString(BENTO_UUID))) {
+					if (DEBUG) Log.d(TAG, "onUpdate: ignore-3");
+					return;
+				}
+			} catch (JSONException e) {
+				Log.e(TAG, "Failed to get JSON", e);
+				return;
+			}
+
+			// set new state
+			setNewStateObj(stateObj);
+			
 			mLastInt = (obj.getIntKey() == null) ? 0 : obj.getIntKey();
 			if (DEBUG) Log.d(TAG, "onUpdate - mLastInt: " + mLastInt);
 
-			JSONObject stateObj = null;
-			if (obj != null && obj.getJson() != null && obj.getJson().has(STATE)) {
-				stateObj = obj.getJson().optJSONObject(STATE);
-				setNewStateObj(stateObj);
-
-				try {
-					// TODO : just in case
-					if (isValidBento(stateObj.getJSONObject(BENTO).optString(BENTO_UUID))) {
-						Handler handler = new Handler();
-						handler.post(new Runnable(){
-							public void run(){
-								for (OnStateUpdatedListener listener : mListenerList) {
-									listener.onStateUpdated();
-								}
-							}
-						});
-						
-						return;
-					}
-				} catch (JSONException e) {
-					Log.e(TAG, "Failed to get JSON", e);
-					return;
-				}
-				
-			} else {
-				return;
-			}
 		}
 		
 	};

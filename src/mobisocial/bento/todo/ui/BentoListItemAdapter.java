@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 import mobisocial.bento.todo.R;
 import mobisocial.bento.todo.io.BentoManager;
+import mobisocial.bento.todo.util.UIUtils;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,7 +31,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class BentoListItemAdapter extends ArrayAdapter<BentoListItem> {
-	private static final Boolean DEBUG = false;
+	private static final Boolean DEBUG = UIUtils.isDebugMode();
 	private static final String TAG = "BentoListItemAdapter";
 
 	private LayoutInflater mInflater;

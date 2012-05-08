@@ -16,9 +16,13 @@
 
 package mobisocial.bento.todo.ui;
 
+import mobisocial.bento.todo.R;
 import mobisocial.bento.todo.io.BentoManager;
 import mobisocial.bento.todo.io.BentoManager.OnStateUpdatedListener;
 import mobisocial.bento.todo.ui.TodoListFragment.OnBentoSelectedListener;
+import mobisocial.bento.todo.util.InitialHelper;
+import mobisocial.bento.todo.util.InitialHelper.OnInitCompleteListener;
+import mobisocial.socialkit.musubi.Musubi;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ActionBar;
@@ -26,8 +30,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
-
-import mobisocial.bento.todo.R;
 
 public class TodoListActivity extends FragmentActivity implements OnBentoSelectedListener {
 	public static final String EXTRA_LAUNCHED_FROM_BENTO_LIST = "launched_from_bento_list";
@@ -41,20 +43,37 @@ public class TodoListActivity extends FragmentActivity implements OnBentoSelecte
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_todo_list);
         
         mLaunchedFromBentoList = getIntent().hasExtra(EXTRA_LAUNCHED_FROM_BENTO_LIST);
+
+        if (!mLaunchedFromBentoList) {
+			// create Musubi Instance
+	        InitialHelper initHelper = new InitialHelper(this, mInitCompleteListener);
+			Musubi musubi = initHelper.initMusubiInstance();
+			if (musubi == null) {
+				return;
+			}
+        }
+        
+        setContentView(R.layout.activity_todo_list);
 
 		final ActionBar actionBar = getSupportActionBar();
 		// set defaults for logo & home up
 		actionBar.setDisplayHomeAsUpEnabled(true); // bad know-how for enabling home clickable on ICS.
 		actionBar.setDisplayHomeAsUpEnabled(mLaunchedFromBentoList);
 		actionBar.setDisplayUseLogoEnabled(false);
-		actionBar.setTitle(mManager.getBentoListItem().bento.name.toString());
+		if (mLaunchedFromBentoList) {
+			actionBar.setTitle(mManager.getBentoListItem().bento.name.toString());
+		}
 		
 		FragmentManager fm = getSupportFragmentManager();
 		mTodoListFragment = (TodoListFragment) fm.findFragmentById(R.id.fragment_todo_list);
 		mManager.addListener(mStateUpdatedListener);
+		
+		// loading
+		if (!mLaunchedFromBentoList) {
+			mTodoListFragment.setProgressBarVisible(true);
+		}
     }
 	
 	@Override
@@ -89,6 +108,15 @@ public class TodoListActivity extends FragmentActivity implements OnBentoSelecte
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 	}
+	
+	// InitialHelper > OnInitCompleteListener
+	private OnInitCompleteListener mInitCompleteListener = new OnInitCompleteListener() {
+		@Override
+		public void onInitCompleted() {
+			onBentoSelected();
+			mTodoListFragment.setProgressBarVisible(false);
+		}
+	};
 	
 	// TodoListFragment > OnBentoSelectedListener
 	@Override

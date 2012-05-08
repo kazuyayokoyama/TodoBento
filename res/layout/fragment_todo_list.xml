@@ -27,10 +27,23 @@
         android:layout_weight="1"
         android:drawSelectorOnTop="false" />
         
-    <TextView android:id="@id/android:empty"
+    <!-- Empty -->
+    <LinearLayout android:id="@id/android:empty"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="10dip"
-        android:layout_marginTop="10dip"
-        android:text="@string/todo_list_empty" />
+        android:background="#FFFFFF">
+        <TextView android:id="@+id/empty_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dip"
+            android:layout_marginTop="10dip"
+            android:text="@string/todo_list_empty" />
+	    <ProgressBar android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dip"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+    </LinearLayout>
 </LinearLayout>

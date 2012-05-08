@@ -21,7 +21,7 @@ import android.content.res.Configuration;
 import android.os.Build;
 
 public class UIUtils {
-	private static final Boolean DEBUG = true;
+	private static final Boolean DEBUG = false;
 	
 	public static boolean isDebugMode() {
 		return DEBUG;

@@ -173,10 +173,7 @@ public class BentoListActivity extends FragmentActivity {
 							
 							mManager.createBento(bento, plainMsg);
 
-							// return to home
-							Intent intent = new Intent();
-							setResult(RESULT_OK, intent);
-							finish();
+							goTodoList();
 						}
 					}
 				})
@@ -224,5 +221,13 @@ public class BentoListActivity extends FragmentActivity {
 					}
 				});
 		libDialog.create().show();
+    }
+    
+    private void goTodoList() {
+		// setBentoObjUri doesn't need because it's already done when created.
+		// Intent
+		Intent intent = new Intent(this, TodoListActivity.class);
+		intent.putExtra(TodoListActivity.EXTRA_LAUNCHED_FROM_BENTO_LIST, true);
+		startActivity(intent);
     }
 }

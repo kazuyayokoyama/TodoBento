@@ -434,6 +434,14 @@ public class TodoListFragment extends ListFragment {
 							imageFile = JpgFileHelper.saveTmpFile(is);
 							is.close();
 						}
+					} else if (uri.toString().startsWith("content://com.android.gallery3d.provider")) {
+						// motorola xoom doesn't work for contentresolver even if the image comes from picasa.
+						// So just adds the condition of startsWith...
+						// See in detail : http://dimitar.me/how-to-get-picasa-images-using-the-image-picker-on-android-devices-running-any-os-version/
+						uri = Uri.parse(uri.toString().replace("com.android.gallery3d","com.google.android.gallery3d"));
+						final InputStream is = getActivity().getContentResolver().openInputStream(uri);
+						imageFile = JpgFileHelper.saveTmpFile(is);
+						is.close();
 					} else {
 						// http or https
 						HttpURLConnection http = null;

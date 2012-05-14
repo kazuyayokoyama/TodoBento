@@ -122,7 +122,7 @@ public class BentoManager {
 		
 		// remove previous data
 		if (mCurrentUri != null) {
-			mMusubi.objForUri(mCurrentUri).getSubfeed().unregisterStateObserver(mStateObserver);
+			musubi.objForUri(mCurrentUri).getSubfeed().unregisterStateObserver(mStateObserver);
 		}
 		mCurrentUri = null;
 		mBentoList = new ArrayList<BentoListItem>();
@@ -139,22 +139,6 @@ public class BentoManager {
 		// start new one
 		if (mMusubi.getObj() != null && mMusubi.getObj().getSubfeed() != null) {
 			setBentoObjUri(mMusubi.getObj().getUri());
-		}
-	}
-
-	public void fin() {
-		if (DEBUG) Log.d(TAG, "fin()");
-		
-		if (mCurrentUri != null) {
-			mMusubi.objForUri(mCurrentUri).getSubfeed().unregisterStateObserver(mStateObserver);
-		}
-		mCurrentUri = null;
-		mBentoList = null;
-		mBento = null;
-		mMemberNameCache = null;
-
-		if (sInstance != null) {
-			sInstance = null;
 		}
 	}
 
